@@ -4,6 +4,11 @@
     "src": "resources/css/app.css",
     "isEntry": true
   },
+  "resources/css/forma.css": {
+    "file": "assets/forma-Bgc2cFj9.css",
+    "src": "resources/css/forma.css",
+    "isEntry": true
+  },
   "resources/js/app.js": {
     "file": "assets/app-dDPK_2kg.js",
     "name": "app",
