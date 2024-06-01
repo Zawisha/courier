@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\LocaleController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\YandexApiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +17,21 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('post.post');
+    return view('welcome');
 });
+
+Route::get('locale/{lang}',[LocaleController::class, 'setLocale']);
+Route::get('createWalkingCourier',[YandexApiController::class, 'createWalkingCourier']);
+Route::get('getWorkRules',[YandexApiController::class, 'getWorkRules']);
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';

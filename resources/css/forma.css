@@ -1,0 +1,12 @@
+.locale-container {
+    display: flex;
+    justify-content: flex-end; /* Выравнивание по правому краю */
+    padding: 10px; /* Отступ внутри блока */
+}
+.alert_danger_errors {
+    background-color: red;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+
+}
