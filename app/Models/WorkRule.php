@@ -14,5 +14,9 @@ class WorkRule extends Model
     {
         return WorkRule::where('id_enable',1)->get();
     }
+    public function getWorkId($id)
+    {
+        return WorkRule::where('id',$id)->pluck('work_id')->first();
+    }
 
 }

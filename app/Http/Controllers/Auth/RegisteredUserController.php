@@ -63,37 +63,91 @@ class RegisteredUserController extends Controller
     {
         // Очистка ошибок сессии перед обработкой формы
         session()->forget('errors');
-        //создаём пешего курьера через АПИ
-        //$this->mainTransform($request);
-        //преобразуем дату рождения
-        $dateOfBirth=$this->TransformDataToApiView($request->date_of_birth);
-        //преобразуем телефон
-        $phone=$this->TransformPhone($request->phone);
-        //преобразуем роль
-        $roleId=$this->statusCourier->getStatusId($request->role);
-        $response =$this->yandexApiController->createWalkingCourier($dateOfBirth,$request->first_name,$request->surname,$request->patronymic,$phone);
-        // Если курьер успешно создан
-        if ($response['status'] == 200) {
-            // Успешный ответ
-            $userInfo=  User::create([
-                'name' => $request->name,
-                'email' =>$request->email,
-                'password' => Hash::make($request->password),
-            ]);
-            $this->courierInfo->createCourier($request,$userInfo,$roleId[0]);
-            $this->successApiLog->saveLog($userInfo,$response['data']['contractor_profile_id']);
 
-            event(new Registered($userInfo));
-            Auth::login($userInfo);
-            return redirect(RouteServiceProvider::HOME);
-        } else {
-            $this->errorsApiLog->saveError($request,$roleId[0],$response);
-            $message=$this->customErrorsService->errorMessage($response);
-            return redirect()->back()->withInput()->withErrors(['custom_error' => $message]);
+        //создаём пешего курьера через АПИ
+        if(($request->role=='pesh')||($request->role=='velo'))
+        {
+            //преобразуем дату рождения
+            $dateOfBirth=$this->TransformDataToApiView($request->date_of_birth);
+            //преобразуем телефон
+            $phone=$this->TransformPhone($request->phone);
+            //преобразуем роль
+            $roleId=$this->statusCourier->getStatusId($request->role);
+            //преоразуем work_rule
+            $workRule=$this->workRule->getWorkId($request->workRule);
+            $response =$this->yandexApiController->createWalkingCourier($dateOfBirth,$request->first_name,$request->surname,$request->patronymic,$phone,$workRule);
+            // Если курьер успешно создан
+            if ($response['status'] == 200) {
+                // Успешный ответ
+                $userInfo=  User::create([
+                    'name' => $request->phone,
+                    'email' =>$request->email,
+                    'password' => Hash::make($request->password),
+                ]);
+                $this->courierInfo->createCourier($request,$userInfo,$roleId[0]);
+                $this->successApiLog->saveLog($userInfo,$response['data']['contractor_profile_id']);
+
+                event(new Registered($userInfo));
+                Auth::login($userInfo);
+                return redirect(RouteServiceProvider::HOME);
+            } else {
+                $this->errorsApiLog->saveError($request,$roleId[0],$response);
+                $message=$this->customErrorsService->errorMessage($response);
+                return redirect()->back()->withInput()->withErrors(['custom_error' => $message]);
+            }
+        }
+        //создам авто курьера через АПИ
+         if(($request->role=='moto')||($request->role=='avto')||($request->role=='gruz'))
+        {
+            //преобразуем дату рождения
+            $dateOfBirth=$this->TransformDataToApiView($request->date_of_birth);
+            //преобразуем телефон
+            $phone=$this->TransformPhone($request->phone);
+            //преобразуем роль
+            $roleId=$this->statusCourier->getStatusId($request->role);
+            //преоразуем work_rule
+            $workRule=$this->workRule->getWorkId($request->workRule);
+            //преобразуем дату окончания действия водительского удостоверения
+            $license_expirated=$this->TransformDataToApiView($request->license_expirated);
+            $license_issue=$this->TransformDataToApiView($request->license_issue);
+            //получаем и преобразуем текущую дату
+            $date = new \DateTime('now', new \DateTimeZone('Europe/Moscow'));
+            // Форматируем дату в формате ISO 8601 YYYY-MM-DD
+             $hire_date = $date->format('Y-m-d');
+            $response =$this->yandexApiController->createAvtoCourier(
+                $dateOfBirth,
+                $request->first_name,
+                $request->surname,
+                $request->patronymic,
+                $phone,
+                $workRule,
+                $request->driverCountry,
+                $license_expirated,
+                $license_issue,
+                $request->licenceNumber,
+                $hire_date
+            );
+            // Если курьер успешно создан
+            if ($response['status'] == 200) {
+                // Успешный ответ
+                $userInfo=  User::create([
+                    'name' => $request->phone,
+                    'email' =>$request->email,
+                    'password' => Hash::make($request->password),
+                ]);
+                $this->courierInfo->createCourier($request,$userInfo,$roleId[0]);
+                $this->successApiLog->saveLog($userInfo,$response['data']['contractor_profile_id']);
+
+                event(new Registered($userInfo));
+                Auth::login($userInfo);
+                return redirect(RouteServiceProvider::HOME);
+            } else {
+                $this->errorsApiLog->saveError($request,$roleId[0],$response);
+                $message=$this->customErrorsService->errorMessage($response);
+                return redirect()->back()->withInput()->withErrors(['custom_error' => $message]);
+            }
         }
     }
 
-    //        $license_issue=$this->TransformDataToApiView($request->license_issue);
-//        $license_expirated=$this->TransformDataToApiView($request->license_expirated);
 
 }

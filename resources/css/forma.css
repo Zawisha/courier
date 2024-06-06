@@ -8,5 +8,9 @@
     color: white;
     padding: 10px;
     border-radius: 5px;
-
+}
+.header_reg_text {
+    text-align: center;
+    font-size: medium;
+    padding-bottom: 10px;
 }

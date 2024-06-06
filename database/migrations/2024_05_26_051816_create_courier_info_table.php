@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('licenceNumber')->nullable();
             $table->text('license_issue')->nullable();
             $table->text('license_expirated')->nullable();
+            $table->text('driverCountry')->nullable();
             $table->text('telegram')->nullable();
             $table->text('contractor_profile_id')->nullable();
             $table->integer('sended_to_yandex')->default(0);

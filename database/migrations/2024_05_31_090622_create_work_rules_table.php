@@ -16,6 +16,8 @@ return new class extends Migration
             $table->text('work_id')->default(null);
             $table->boolean('id_enable')->default(true);
             $table->text('name')->default(null);
+            $table->text('descr_ru')->default(null);
+            $table->text('descr_eng')->default(null);
             $table->timestamps();
         });
     }

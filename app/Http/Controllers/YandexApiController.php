@@ -3,15 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\TokenInfo;
+use App\Traits\ResponseErrorApiTrait;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 
 class YandexApiController extends Controller
 {
-    //список id созданных курьеров
-    //9af279b0a219a0b41d8b4ffc6555bc93
-    //9af279b0a219a0b41d8b4ffc6555bc93
-
+    use ResponseErrorApiTrait;
     protected $tokenInfo;
 
     public function __construct(TokenInfo $tokenInfo)
@@ -19,7 +17,7 @@ class YandexApiController extends Controller
         $this->tokenInfo = $tokenInfo;
     }
 
-    public function createWalkingCourier($date_of_birth,$first_name,$surname,$patronymic,$phone)
+    public function createWalkingCourier($date_of_birth,$first_name,$surname,$patronymic,$phone,$workRule)
     {
        $tokenInfo=$this->tokenInfo->getInfo();
 
@@ -40,7 +38,7 @@ class YandexApiController extends Controller
                 'middle_name' => $patronymic,
             ],
             'phone' => $phone,
-            'work_rule_id' => '180326e5a0284483b4952d535b0b1d7b',
+            'work_rule_id' => $workRule,
         ];
         try {
             // Отправьте POST-запрос
@@ -58,11 +56,85 @@ class YandexApiController extends Controller
             ];
 
         } catch (\Exception $e) {
-            // Обработка ошибок
+            $resp=$this->responseApiErrorTransform($e);
             return [
-                'status' => 500,
+                'status' => $resp['status'],
                 'data' => [
-                    'message' => $e->getMessage(),
+                    'message' => $resp['message'],
+                ],
+            ];
+        }
+    }
+
+    public function createAvtoCourier($date_of_birth,$first_name,$surname,$patronymic,$phone,$workRule,$driverCountry,$license_expirated,$license_issue,$licenceNumber,$hire_date)
+    {
+        $tokenInfo=$this->tokenInfo->getInfo();
+
+        $client = new Client();
+        $url = 'https://fleet-api.taxi.yandex.net/v2/parks/contractors/auto-courier-profile';
+        $headers = [
+            'X-Idempotency-Token' => $tokenInfo->idempotency_token,
+            'X-Client-ID' => $tokenInfo->client_id,
+            'X-API-Key' => $tokenInfo->api_key,
+            'X-Park-ID' => $tokenInfo->park_id,
+        ];
+        // Тело запроса
+        $body = [
+            "account" => [
+        "balance_limit" => "5",
+        "block_orders_on_balance_below_limit" => false,
+        "work_rule_id" => $workRule
+        ],
+            "order_provider"=> [
+        "partner"=> true,
+        "platform"=> true
+                               ],
+            "person"=>
+                [
+                 "contact_info"=> [
+        "phone"=> $phone
+                                  ],
+                "driver_license"=> [
+        "country"=> $driverCountry,
+        "expiry_date"=> $license_expirated,
+        "issue_date"=> $license_issue,
+        "number"=> $licenceNumber
+                                   ],
+                "driver_license_experience"=> [
+        "total_since_date"=> $license_issue
+                                              ],
+                'full_name' => [
+        'first_name' => $first_name,
+        'last_name' => $surname,
+        'middle_name' => $patronymic,
+                               ],
+                ],
+                "profile"=> [
+        "hire_date"=> $hire_date
+                            ],
+
+        ];
+        try {
+            // Отправьте POST-запрос
+            $response = $client->post($url, [
+                'headers' => $headers,
+                'json' => $body,
+            ]);
+
+            // Получите ответ и декодируйте его
+            $responseBody = json_decode($response->getBody(), true);
+            // Верните ответ
+            return [
+                'status' => $response->getStatusCode(),
+                'data' => $responseBody,
+            ];
+
+        } catch (\Exception $e) {
+            $resp=$this->responseApiErrorTransform($e);
+            return [
+                'status' => $resp['status'],
+                'data' => [
+                    'message' => $resp['message'],
                 ],
             ];
         }
@@ -87,17 +159,15 @@ class YandexApiController extends Controller
                 'headers' => $headers,
                 'json' => $body,
             ]);
-
             // Получите ответ и декодируйте его
             $responseBody = json_decode($response->getBody(), true);
             dd($responseBody);
             // Верните ответ
             return response()->json($responseBody);
-
         } catch (\Exception $e) {
+            dd($e->getMessage);
             // Обработка ошибок
             return response()->json([
-                dd($e->getMessage()),
                 'error' => $e->getMessage(),
             ], 500);
         }

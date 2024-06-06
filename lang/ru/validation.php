@@ -48,7 +48,7 @@ return [
     'distinct' => 'The :attribute field has a duplicate value.',
     'doesnt_end_with' => 'The :attribute field must not end with one of the following: :values.',
     'doesnt_start_with' => 'The :attribute field must not start with one of the following: :values.',
-    'email' => 'The :attribute field must be a valid email address.',
+    'email' => 'Поле :attribute должно быть почтовым адресом.',
     'ends_with' => 'The :attribute field must end with one of the following: :values.',
     'enum' => 'The selected :attribute is invalid.',
     'exists' => 'The selected :attribute is invalid.',
@@ -146,7 +146,7 @@ return [
         'array' => 'The :attribute field must contain :size items.',
         'file' => 'The :attribute field must be :size kilobytes.',
         'numeric' => 'The :attribute field must be :size.',
-        'string' => 'The :attribute field must be :size characters.',
+        'string' => 'Поле :attribute должно содержать :size символа.',
     ],
     'starts_with' => 'The :attribute field must start with one of the following: :values.',
     'string' => 'The :attribute field must be a string.',
@@ -160,6 +160,8 @@ return [
     'custom_error_400' => 'Не верно заполнена форма. Пожалуйста проверьте введённые данные',
     'custom_error_429' => 'Превышено допустимое число запросов. Пожалуйста попробуйте позже',
     'custom_error_500' => 'Внутренняя ошибка сервера. Пожалуйста попробуйте позже',
+    'custom_error_400_license' => 'Не правильно введён номер водительского удостоверения',
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

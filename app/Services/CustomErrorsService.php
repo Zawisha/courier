@@ -10,6 +10,10 @@ class CustomErrorsService
         $message = '';
         if ($response['status'] == 400) {
             $message = __('validation.custom_error_400');
+            if($response['data']['message']=='invalid_driver_license')
+            {
+                $message = __('validation.custom_error_400_license');
+            }
         } elseif ($response['status'] == 429) {
             $message = __('validation.custom_error_429');
         } elseif ($response['status'] == 500) {

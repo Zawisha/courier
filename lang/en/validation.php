@@ -160,6 +160,8 @@ return [
     'custom_error_400' => 'The form was filled out incorrectly. Please check the entered data',
     'custom_error_429' => 'The allowed number of requests has been exceeded. Please try again later',
     'custom_error_500' => 'Internal Server Error. Please try again later',
+    'custom_error_400_license' => 'Invalid driver license',
+
 
     /*
     |--------------------------------------------------------------------------

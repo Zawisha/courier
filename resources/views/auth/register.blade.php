@@ -9,6 +9,7 @@
         <a href="{{ url('locale/ru') }}">RU</a>
     @endif
     </div>
+    <div class="header_reg_text">{{__('custom.registerHeader')}}.</div>
     @if ($errors->has('custom_error'))
         <div class="alert_danger_errors">
             {{ $errors->first('custom_error') }}
@@ -16,11 +17,11 @@
     @endif
     <form method="POST" action="{{ route('register') }}">
         @csrf
-        <!-- Nickname -->
-        <div>
-            <x-input-label for="name" :value="__('custom.Login')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+        <!-- Phone -->
+        <div class="mt-4">
+            <x-input-label for="phone" :value="__('custom.Phone')" />
+            <input type="text" placeholder="{{__('custom.Phone')}}" name="phone" class="phone_mask" id="phone" value="{{ old('phone') }}">
+            <x-input-error :messages="$errors->get('phone')" class="mt-2" />
         </div>
         <!--First name -->
         <div>
@@ -45,7 +46,7 @@
             <x-input-label for="role" :value="__('custom.Role')" />
             <select id="role" name="role" class="block mt-1 w-full"  onchange="toggleNameFields()">
                 @foreach($statusCourier as $status)
-                    <option value="{{ $status->value_status }}">
+                    <option value="{{ $status->value_status }}" {{ old('role') == $status->value_status ? 'selected' : '' }}>
                         @if ($locale == 'ru' || $locale == null)
                         {{ $status->status }}
                         @else
@@ -61,7 +62,11 @@
             <select id="workRule" name="workRule" class="block mt-1 w-full">
                 @foreach($workRules as $oneRule)
                     <option value="{{ $oneRule->id }}">
-                            {{ $oneRule->name }}
+                        @if ($locale == 'ru' || $locale == null)
+                            {{ $oneRule->name }}{{ $oneRule->descr_ru }}
+                        @else
+                            {{ $oneRule->name }}{{ $oneRule->descr_eng }}
+                        @endif
                     </option>
                 @endforeach
             </select>
@@ -70,37 +75,45 @@
         <!-- Date of birth -->
         <div class="mt-4">
             <x-input-label for="date_of_birth" :value="__('custom.Date of birth')" />
-            <input id="date_of_birth" type="text" name="date_of_birth" placeholder="{{__('custom.choose_bd')}}">
+            <input id="date_of_birth" type="text" name="date_of_birth" placeholder="{{__('custom.choose_bd')}}" value="{{ old('date_of_birth')}}">
             <x-input-error :messages="$errors->get('date_of_birth')" class="mt-2" />
         </div>
-        <!-- Phone -->
-        <div class="mt-4">
-            <x-input-label for="phone" :value="__('custom.Phone')" />
-            <input type="text" placeholder="{{__('custom.Phone')}}" name="phone" class="phone_mask" id="phone">
-            <x-input-error :messages="$errors->get('phone')" class="mt-2" />
-        </div>
+
         <!-- Водительское удостоверение -->
         <!-- Серия и номер водительского удостоверения -->
         <div class="mt-4 jsDriver">
             <x-input-label for="surname" :value="__('custom.Driver license number')" />
-            <x-text-input id="licenceNumber" class="block mt-1 w-full" type="text" name="licenceNumber" :value="old('licenceNumber')"  autofocus autocomplete="licenceNumber" placeholder="xxxxxxxxxx"/>
-            <x-input-error :messages="$errors->get('surname')" class="mt-2" />
+            <x-text-input id="licenceNumber" class="block mt-1 w-full" type="text" name="licenceNumber" :value="old('licenceNumber')"  autofocus autocomplete="licenceNumber" placeholder=""
+                          oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '')"
+                          onkeypress="return /[a-zA-Z0-9]/.test(event.key)"
+            />
+            <x-input-error :messages="$errors->get('licenceNumber')" class="mt-2" />
         </div>
         <!-- Дата выдачи водительского удостоверения-->
         <div class="mt-4 jsDriver">
             <x-input-label for="license_issue" :value="__('custom.Driver license issue date')" />
-            <input id="license_issue" type="text" name="license_issue" placeholder="Выберите дату рождения">
+            <input id="license_issue" type="text" name="license_issue" placeholder="{{__('custom.choose_date')}}" value="{{ old('license_issue')}}">
             <x-input-error :messages="$errors->get('license_issue')" class="mt-2" />
         </div>
         <!-- Дата окончания водительского удостоверения-->
         <div class="mt-4 jsDriver">
             <x-input-label for="license_expirated" :value="__('custom.Driver license expiration date')" />
-            <input id="license_expirated" type="text" name="license_expirated" placeholder="Выберите дату рождения">
+            <input id="license_expirated" type="text" name="license_expirated" placeholder="{{__('custom.choose_date')}}" value="{{ old('license_expirated')}}">
             <x-input-error :messages="$errors->get('license_expirated')" class="mt-2" />
+        </div>
+        <!-- Страна выдачи удостоверения -->
+        <div class="mt-4 jsDriver">
+            <x-input-label for="driverCountry" :value="__('custom.driverCountryHead')" />
+            <x-input-label for="driverCountry" :value="__('custom.threeLetterCode')" />
+            <x-text-input id="driverCountry" class="block mt-1 w-full" type="text" name="driverCountry" :value=" old('driverCountry') ?? 'rus' " maxlength="3"
+                          oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '')"
+                          onkeypress="return /[a-zA-Z]/.test(event.key)"
+            />
+            <x-input-error :messages="$errors->get('driverCountry')" class="mt-2" />
         </div>
         <!-- Telegram -->
         <div>
-            <x-input-label for="name1" :value="__('custom.Telegram')" />
+            <x-input-label for="telegram" :value="__('custom.Telegram')" />
             <x-text-input id="telegram" class="block mt-1 w-full" type="text" name="telegram" :value="old('telegram')" />
             <x-input-error :messages="$errors->get('telegram')" class="mt-2" />
         </div>

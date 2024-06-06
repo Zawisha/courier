@@ -14,13 +14,14 @@ return [
     */
 
     'Login' => 'Логин',
+    'password' => 'пароль',
     'Name' => 'Имя',
     'Surname' => 'Фамилия',
     'Patronymic' => 'Отчество',
     'choose_bd'=> 'Выберите дату рождения',
     'Date of birth'=> 'Дата рождения',
-    'Phone'=> 'Телефон',
-    'Driver license number'=> 'Номер водительского удостоверения',
+    'Phone'=> 'Номер телефона',
+    'Driver license number'=> 'Серия и номер водительского удостоверения',
     'Driver license issue date'=> 'Дата выдачи водительского удостоверения',
     'Driver license expiration date'=> 'Дата окончания водительского удостоверения',
     'Telegram'=> 'Телеграм',
@@ -29,5 +30,14 @@ return [
     'Confirm Password'=> 'Повторите пароль',
     'Register'=> 'Зарегистрироваться',
     'WorkRule'=> 'Выбор тарифа',
-    'Role'=> 'Роль',
+    'Role'=> 'Каким курьером хотите зарегистрироваться?',
+    'driverCountryHead'=> "Страна выдачи водительского удостоверения",
+    'driverCountry'=> "страна выдачи",
+    'threeLetterCode'=> "Трехбуквенный код(rus, blr, ukr, kaz, tjk, uzb, arm, aze и др.)",
+    'license_issue' => 'дата выдачи',
+    'license_expirated' => 'дата окончания',
+    'success_registered' => 'Вы успешно зарегистрировались в системе',
+    'choose_date' => 'Выберите дату',
+    'registerHeader'=> 'Регистрация и подключение к платформе.',
+
 ];

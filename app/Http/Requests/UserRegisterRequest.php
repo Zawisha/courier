@@ -24,7 +24,6 @@ class UserRegisterRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => ['required', 'string', 'max:100', 'min:3'],
             'first_name' => ['required', 'string', 'max:100', 'min:2'],
             'surname' => ['required', 'string', 'max:100', 'min:2'],
             'patronymic' => ['nullable', 'string', 'max:100'], // Может быть пустым
@@ -32,12 +31,13 @@ class UserRegisterRequest extends FormRequest
             'date_of_birth' => ['required', new DateFormat('d-m-Y')],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'telegram' => ['required', 'string', 'max:100', 'min:2'],
+            'telegram' => ['max:100'],
             'phone' => ['required', 'string', 'max:30', 'min:5'],
         ];
 
         // Добавляем правила только если роль не pesh или velo
         if ($this->input('role') !== 'pesh' && $this->input('role') !== 'velo') {
+            $rules['driverCountry'] = ['alpha', 'size:3'];
             $rules['licenceNumber'] = ['required', 'string', 'max:100', 'min:2'];
             $rules['license_issue'] = ['required', new DateFormat('d-m-Y')];
             $rules['license_expirated'] = ['required', new DateFormat('d-m-Y')];
@@ -61,6 +61,7 @@ class UserRegisterRequest extends FormRequest
             'license_issue.required' => __('validation.required', ['attribute' => __('custom.license_issue')]),
             'license_expirated.required' => __('validation.required', ['attribute' => __('custom.license_expirated')]),
 
+
             'name.max' => __('validation.max.string', ['attribute' => __('custom.Login'), 'max' => ':max']),
             'first_name.max' => __('validation.max.string', ['attribute' => __('custom.first_name'), 'max' => ':max']),
             'surname.max' => __('validation.max.string', ['attribute' => __('custom.surname'), 'max' => ':max']),
@@ -81,6 +82,7 @@ class UserRegisterRequest extends FormRequest
             'phone.min' => __('validation.min.string', ['attribute' => __('custom.phone'), 'min' => ':min']),
             'licenceNumber.min' => __('validation.min.string', ['attribute' => __('custom.licenceNumber'), 'min' => ':min']),
 
+            'driverCountry.size' => __('validation.required', ['attribute' => __('custom.driverCountry')]),
 
         ];
     }
