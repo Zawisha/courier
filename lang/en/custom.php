@@ -39,5 +39,6 @@ return [
     'success_registered' => 'You have been successfully registered',
     'choose_date'=> 'Select date',
     'registerHeader'=> 'Registration and connection to the platform',
+    'titleCust'=> 'Connecting to the platform as a courier',
 
 ];
