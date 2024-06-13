@@ -61,7 +61,6 @@ class RegisteredUserController extends Controller
      */
       public function store(UserRegisterRequest $request): RedirectResponse
     {
-
         // Очистка ошибок сессии перед обработкой формы
         session()->forget('errors');
 

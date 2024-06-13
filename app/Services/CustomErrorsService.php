@@ -14,6 +14,10 @@ class CustomErrorsService
             {
                 $message = __('validation.custom_error_400_license');
             }
+            if($response['data']['message']=='duplicate_phone')
+            {
+                $message = __('validation.custom_error_400_phone');
+            }
         } elseif ($response['status'] == 429) {
             $message = __('validation.custom_error_429');
         } elseif ($response['status'] == 500) {
