@@ -19,12 +19,14 @@ class YandexApiController extends Controller
 
     public function createWalkingCourier($date_of_birth,$first_name,$surname,$patronymic,$phone,$workRule)
     {
-       $tokenInfo=$this->tokenInfo->getInfo();
-
+        $tokenInfo=$this->tokenInfo->getInfo();
+        $idempotency_token=$this->tokenInfo->setRandToken();
+  ;
         $client = new Client();
         $url = 'https://fleet-api.taxi.yandex.net/v2/parks/contractors/walking-courier-profile';
         $headers = [
-            'X-Idempotency-Token' => $tokenInfo->idempotency_token,
+//            'X-Idempotency-Token' => $tokenInfo->idempotency_token,
+            'X-Idempotency-Token' =>$idempotency_token,
             'X-Client-ID' => $tokenInfo->client_id,
             'X-API-Key' => $tokenInfo->api_key,
             'X-Park-ID' => $tokenInfo->park_id,
@@ -53,9 +55,11 @@ class YandexApiController extends Controller
             return [
                 'status' => $response->getStatusCode(),
                 'data' => $responseBody,
+                'idempotency_token' => $idempotency_token,
             ];
 
         } catch (\Exception $e) {
+
             $resp=$this->responseApiErrorTransform($e);
             return [
                 'status' => $resp['status'],
@@ -69,11 +73,12 @@ class YandexApiController extends Controller
     public function createAvtoCourier($date_of_birth,$first_name,$surname,$patronymic,$phone,$workRule,$driverCountry,$license_expirated,$license_issue,$licenceNumber,$hire_date)
     {
         $tokenInfo=$this->tokenInfo->getInfo();
+        $idempotency_token=$this->tokenInfo->setRandToken();
 
         $client = new Client();
         $url = 'https://fleet-api.taxi.yandex.net/v2/parks/contractors/auto-courier-profile';
         $headers = [
-            'X-Idempotency-Token' => $tokenInfo->idempotency_token,
+            'X-Idempotency-Token' => $idempotency_token,
             'X-Client-ID' => $tokenInfo->client_id,
             'X-API-Key' => $tokenInfo->api_key,
             'X-Park-ID' => $tokenInfo->park_id,
@@ -127,6 +132,7 @@ class YandexApiController extends Controller
             return [
                 'status' => $response->getStatusCode(),
                 'data' => $responseBody,
+                'idempotency_token' => $idempotency_token,
             ];
 
         } catch (\Exception $e) {

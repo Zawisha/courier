@@ -61,6 +61,7 @@ class RegisteredUserController extends Controller
      */
       public function store(UserRegisterRequest $request): RedirectResponse
     {
+
         // Очистка ошибок сессии перед обработкой формы
         session()->forget('errors');
 
@@ -84,7 +85,7 @@ class RegisteredUserController extends Controller
                     'email' =>$request->email,
                     'password' => Hash::make($request->password),
                 ]);
-                $this->courierInfo->createCourier($request,$userInfo,$roleId[0]);
+                $this->courierInfo->createCourier($request,$userInfo,$roleId[0],$response['idempotency_token']);
                 $this->successApiLog->saveLog($userInfo,$response['data']['contractor_profile_id']);
 
                 event(new Registered($userInfo));
@@ -135,7 +136,7 @@ class RegisteredUserController extends Controller
                     'email' =>$request->email,
                     'password' => Hash::make($request->password),
                 ]);
-                $this->courierInfo->createCourier($request,$userInfo,$roleId[0]);
+                $this->courierInfo->createCourier($request,$userInfo,$roleId[0],$response['idempotency_token']);
                 $this->successApiLog->saveLog($userInfo,$response['data']['contractor_profile_id']);
 
                 event(new Registered($userInfo));

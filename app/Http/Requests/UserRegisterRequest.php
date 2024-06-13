@@ -32,7 +32,7 @@ class UserRegisterRequest extends FormRequest
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'telegram' => ['max:100'],
-            'phone' => ['required', 'string', 'max:30', 'min:5'],
+            'phone' => ['required', 'string', 'max:30', 'min:5','unique:users,name'],
         ];
 
         // Добавляем правила только если роль не pesh или velo
@@ -60,6 +60,8 @@ class UserRegisterRequest extends FormRequest
             'licenceNumber.required' => __('validation.required', ['attribute' => __('custom.licenceNumber')]),
             'license_issue.required' => __('validation.required', ['attribute' => __('custom.license_issue')]),
             'license_expirated.required' => __('validation.required', ['attribute' => __('custom.license_expirated')]),
+
+            'phone.unique' => __('validation.unique', ['attribute' => __('custom.Phone')]),
 
 
             'name.max' => __('validation.max.string', ['attribute' => __('custom.Login'), 'max' => ':max']),

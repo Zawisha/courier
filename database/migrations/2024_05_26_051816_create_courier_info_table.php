@@ -27,6 +27,7 @@ return new class extends Migration
             $table->text('contractor_profile_id')->nullable();
             $table->integer('sended_to_yandex')->default(0);
             $table->integer('work_rule_id')->default(0);
+            $table->text('idempotency_token')->nullable();
             $table->timestamps();
         });
     }

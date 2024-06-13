@@ -15,5 +15,23 @@ class TokenInfo extends Model
          return TokenInfo::first();
     }
 
+    public function setRandToken()
+    {
+        do {
+            $token = $this->generateIdempotencyToken();
+        } while ($this->tokenExistsInDatabase($token));
+
+        return $token;
+    }
+    private function tokenExistsInDatabase($token)
+    {
+        return CourierInfo::where('idempotency_token', $token)->exists();
+    }
+    public function generateIdempotencyToken()
+    {
+        return hash('sha256', strval(uniqid()));
+    }
+
+
 
 }

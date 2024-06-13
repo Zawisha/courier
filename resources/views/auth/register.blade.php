@@ -1,4 +1,5 @@
 <x-guest-layout>
+
     @php
         $locale = App::getLocale();
     @endphp
@@ -9,13 +10,13 @@
         <a href="{{ url('locale/ru') }}">RU</a>
     @endif
     </div>
-    <div class="header_reg_text">{{__('custom.registerHeader')}}.</div>
+    <div class="header_reg_text">{{__('custom.registerHeader')}}</div>
     @if ($errors->has('custom_error'))
         <div class="alert_danger_errors">
             {{ $errors->first('custom_error') }}
         </div>
     @endif
-    <form method="POST" action="{{ route('register') }}">
+    <form method="POST" action="{{ route('register') }}" id="form_register">
         @csrf
         <!-- Phone -->
         <div class="mt-4">
@@ -114,7 +115,10 @@
         <!-- Telegram -->
         <div>
             <x-input-label for="telegram" :value="__('custom.Telegram')" />
-            <x-text-input id="telegram" class="block mt-1 w-full" type="text" name="telegram" :value="old('telegram')" />
+            <x-text-input id="telegram" class="block mt-1 w-full" type="text" name="telegram" :value="old('telegram')"
+                          oninput="this.value = this.value.replace(/[^a-zA-Z0-9@_()!№$%&?*-|]/g, '')"
+                          onkeypress="return /[a-zA-Z0-9@_()!№$%&?*-|]/.test(event.key)"
+            />
             <x-input-error :messages="$errors->get('telegram')" class="mt-2" />
         </div>
 
@@ -153,12 +157,41 @@
 {{--                {{ __('Already registered?') }}--}}
 {{--            </a>--}}
 
-            <x-primary-button class="ms-4">
+            <x-primary-button class="ms-4" onclick="registerWithGif()" id="registerButton">
                 {{ __('custom.Register') }}
             </x-primary-button>
+
         </div>
     </form>
+
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div id="registerGif">
+                        <img src="{{ asset('images/gif/gif.webp') }}" alt="Registering..." />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
     <script>
+
+        function registerWithGif() {
+
+            // Показать модальное окно
+            var myModal = new bootstrap.Modal(document.getElementById('exampleModalCenter'), {
+                keyboard: false
+            });
+            myModal.show();
+            document.getElementById("registerButton").disabled = true;
+            const form = document.getElementById('form_register');
+            form.classList.add('semi-transparent');
+            document.getElementById("form_register").submit();
+
+        }
+
         function toggleNameFields() {
             const role = document.getElementById('role').value;
             var elements = document.getElementsByClassName('jsDriver');
@@ -170,7 +203,6 @@
         }
     </script>
     <script type="module">
-
 
 
         // Initialize the form with the correct fields shown/hidden
@@ -194,6 +226,7 @@
                     locale: locale
                 });
             }
+
         });
         document.addEventListener("DOMContentLoaded", function() {
             const phoneInput = document.getElementById("phone");
