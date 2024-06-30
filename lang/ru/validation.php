@@ -26,10 +26,10 @@ return [
     'before' => 'The :attribute field must be a date before :date.',
     'before_or_equal' => 'The :attribute field must be a date before or equal to :date.',
     'between' => [
-        'array' => 'The :attribute field must have between :min and :max items.',
-        'file' => 'The :attribute field must be between :min and :max kilobytes.',
-        'numeric' => 'The :attribute field must be between :min and :max.',
-        'string' => 'The :attribute field must be between :min and :max characters.',
+        'array' => 'Значение :attribute должно быть между :min и :max .',
+        'file' => 'Значение :attribute должно быть между :min и :max килобайтами.',
+        'numeric' => 'Значение :attribute должно быть между :min и :max.',
+        'string' => 'Значение :attribute должно быть между :min и :max символами.',
     ],
     'boolean' => 'The :attribute field must be true or false.',
     'can' => 'The :attribute field contains an unauthorized value.',
@@ -42,7 +42,7 @@ return [
     'declined' => 'The :attribute field must be declined.',
     'declined_if' => 'The :attribute field must be declined when :other is :value.',
     'different' => 'The :attribute field and :other must be different.',
-    'digits' => 'The :attribute field must be :digits digits.',
+    'digits' => 'Поле :attribute должно содержать :digits цифры.',
     'digits_between' => 'The :attribute field must be between :min and :max digits.',
     'dimensions' => 'The :attribute field has invalid image dimensions.',
     'distinct' => 'The :attribute field has a duplicate value.',
@@ -69,12 +69,12 @@ return [
     ],
     'hex_color' => 'The :attribute field must be a valid hexadecimal color.',
     'image' => 'The :attribute field must be an image.',
-    'in' => 'The selected :attribute is invalid.',
+    'in' => ':attribute не верный.',
     'in_array' => 'The :attribute field must exist in :other.',
     'integer' => 'The :attribute field must be an integer.',
     'ip' => 'The :attribute field must be a valid IP address.',
     'ipv4' => 'The :attribute field must be a valid IPv4 address.',
-    'ipv6' => 'The :attribute field must be a valid IPv6 address.',
+    'ipv6' => 'The :attribute field must be a valid IPv6 address.   ',
     'json' => 'The :attribute field must be a valid JSON string.',
     'lowercase' => 'The :attribute field must be lowercase.',
     'lt' => [
@@ -162,6 +162,7 @@ return [
     'custom_error_500' => 'Внутренняя ошибка сервера. Пожалуйста попробуйте позже',
     'custom_error_400_license' => 'Не правильно введён номер водительского удостоверения',
     'custom_error_400_phone' => 'Номер телефона уже зарегистрирован',
+    'custom_error_400_car_number' => 'Не верный номер машины',
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

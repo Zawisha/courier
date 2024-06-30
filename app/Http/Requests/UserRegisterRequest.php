@@ -41,6 +41,24 @@ class UserRegisterRequest extends FormRequest
             $rules['licenceNumber'] = ['required', 'string', 'max:100', 'min:2'];
             $rules['license_issue'] = ['required', new DateFormat('d-m-Y')];
             $rules['license_expirated'] = ['required', new DateFormat('d-m-Y')];
+            $rules['boosterCount'] = ['required', 'numeric', 'between:0,3'];
+            $rules['licencePlateNumber'] = ['required','string','max:9'];
+            $rules['registrationCertificate'] = ['required','string'];
+            $rules['modelTS'] = ['required', 'string'];
+            $rules['brandTS'] = ['required', 'string'];
+            $rules['carColor'] = ['required', 'numeric'];
+            $rules['carManufactureYear'] = ['required', 'numeric', 'digits:4','between:1970,2025'];
+            $rules['Transmission'] = ['required', 'numeric'];
+            $rules['vin'] = ['required', 'string','size:17'];
+
+        }
+        // Добавляем правила только если роль грузовик
+        if ($this->input('role') == 'gruz') {
+            $rules['cargoHoldDimensionsHeight'] = ['required', 'numeric', 'between:90,250'];
+            $rules['cargoHoldDimensionsLength'] = ['required', 'numeric', 'between:170,601'];
+            $rules['cargoHoldDimensionsWidth'] = ['required', 'numeric', 'between:96,250'];
+            $rules['cargoLoaders'] = ['required', 'numeric', 'between:0,2'];
+            $rules['cargoCapacity'] = ['required'];
         }
         return $rules;
     }
@@ -60,8 +78,26 @@ class UserRegisterRequest extends FormRequest
             'licenceNumber.required' => __('validation.required', ['attribute' => __('custom.licenceNumber')]),
             'license_issue.required' => __('validation.required', ['attribute' => __('custom.license_issue')]),
             'license_expirated.required' => __('validation.required', ['attribute' => __('custom.license_expirated')]),
+            'cargoHoldDimensionsHeight.required' => __('validation.required', ['attribute' => __('custom.Height')]),
+            'cargoHoldDimensionsLength.required' => __('validation.required', ['attribute' => __('custom.Length')]),
+            'cargoHoldDimensionsWidth.required' => __('validation.required', ['attribute' => __('custom.Width')]),
+            'cargoLoaders.required' => __('validation.required', ['attribute' => __('custom.cargoLoaders')]),
+            'boosterCount.required' => __('validation.required', ['attribute' => __('custom.boosterCount')]),
+            'licencePlateNumber.required' => __('validation.required', ['attribute' => __('custom.licencePlateNumber')]),
+            'registrationCertificate.required' => __('validation.required', ['attribute' => __('custom.registrationCertificate')]),
+            'modelTS.required' => __('validation.required', ['attribute' => __('custom.modelTS')]),
+            'brandTS.required' => __('validation.required', ['attribute' => __('custom.brandTS')]),
+            'carColor.required' => __('validation.required', ['attribute' => __('custom.carColor')]),
+            'carManufactureYear.required' => __('validation.required', ['attribute' => __('custom.carManufactureYear')]),
+            'Transmission.required' => __('validation.required', ['attribute' => __('custom.Transmission')]),
+            'vin.required' => __('validation.required', ['attribute' => __('custom.vin')]),
 
             'phone.unique' => __('validation.unique', ['attribute' => __('custom.Phone')]),
+            'registrationCertificate.size' => __('validation.size', ['attribute' => __('custom.registrationCertificate')]),
+            'registrationCertificate.in' => __('validation.in', ['attribute' => __('custom.registrationCertificate')]),
+            'carManufactureYear.digits' => __('validation.digits', ['attribute' => __('custom.carManufactureYear')]),
+            'vin.size' => __('validation.size', ['attribute' => __('custom.vin')]),
+            'carManufactureYear.between' => __('validation.between', ['attribute' => __('custom.carManufactureYear')]),
 
 
             'name.max' => __('validation.max.string', ['attribute' => __('custom.Login'), 'max' => ':max']),
@@ -73,6 +109,10 @@ class UserRegisterRequest extends FormRequest
             'telegram.max' => __('validation.max.string', ['attribute' => __('custom.telegram'), 'max' => ':max']),
             'phone.max' => __('validation.max.string', ['attribute' => __('custom.phone'), 'max' => ':max']),
             'licenceNumber.max' => __('validation.max.string', ['attribute' => __('custom.licenceNumber'), 'max' => ':max']),
+            'registrationCertificate.max' => __('validation.max.string', ['attribute' => __('custom.registrationCertificate'), 'max' => ':max']),
+            'modelTS.max' => __('validation.max.string', ['attribute' => __('custom.modelTS'), 'max' => ':max']),
+            'brandTS.max' => __('validation.max.string', ['attribute' => __('custom.brandTS'), 'max' => ':max']),
+            'licencePlateNumber.max' => __('validation.max.string', ['attribute' => __('custom.licencePlateNumber'), 'max' => ':max']),
 
             'name.min' => __('validation.min.string', ['attribute' => __('custom.Login'), 'min' => ':min']),
             'first_name.min' => __('validation.min.string', ['attribute' => __('custom.first_name'), 'min' => ':min']),
@@ -83,8 +123,16 @@ class UserRegisterRequest extends FormRequest
             'telegram.min' => __('validation.min.string', ['attribute' => __('custom.telegram'), 'min' => ':min']),
             'phone.min' => __('validation.min.string', ['attribute' => __('custom.phone'), 'min' => ':min']),
             'licenceNumber.min' => __('validation.min.string', ['attribute' => __('custom.licenceNumber'), 'min' => ':min']),
+            'registrationCertificate.min' => __('validation.min.string', ['attribute' => __('custom.registrationCertificate'), 'min' => ':min']),
+            'modelTS.min' => __('validation.min.string', ['attribute' => __('custom.modelTS'), 'min' => ':min']),
+            'brandTS.min' => __('validation.min.string', ['attribute' => __('custom.brandTS'), 'min' => ':min']),
 
             'driverCountry.size' => __('validation.required', ['attribute' => __('custom.driverCountry')]),
+            'cargoHoldDimensionsHeight.between' => __('validation.between', ['attribute' => __('custom.Height')]),
+            'cargoHoldDimensionsLength.between' => __('validation.between', ['attribute' => __('custom.Length')]),
+            'cargoHoldDimensionsWidth.between' => __('validation.between', ['attribute' => __('custom.Width')]),
+            'cargoLoaders.between' => __('validation.between', ['attribute' => __('custom.cargoLoaders')]),
+            'boosterCount.between' => __('validation.between', ['attribute' => __('custom.boosterCount')]),
 
         ];
     }

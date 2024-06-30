@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\YandexApiController;
 use App\Http\Requests\UserRegisterRequest;
+use App\Models\CarBrand;
+use App\Models\CarColors;
+use App\Models\CarModel;
+use App\Models\CarTransmission;
 use App\Models\CourierInfo;
 use App\Models\ErrorsApiLog;
 use App\Models\StatusCourier;
@@ -35,7 +39,7 @@ class RegisteredUserController extends Controller
     protected $customErrorsService;
 
     public function __construct(StatusCourier $statusCourier, User $user, CourierInfo $courierInfo, YandexApiController $yandexApiController, WorkRule $workRule,
-                                ErrorsApiLog $errorsApiLog, SuccessApiLog $successApiLog, CustomErrorsService $customErrorsService)
+                                ErrorsApiLog $errorsApiLog, SuccessApiLog $successApiLog, CustomErrorsService $customErrorsService, CarColors $carColors, CarTransmission $carTransmission, CarBrand $carBrand)
     {
         $this->statusCourier = $statusCourier;
         $this->user = $user;
@@ -45,13 +49,21 @@ class RegisteredUserController extends Controller
         $this->errorsApiLog = $errorsApiLog;
         $this->successApiLog = $successApiLog;
         $this->customErrorsService = $customErrorsService;
+        $this->carColors = $carColors;
+        $this->carTransmission = $carTransmission;
+        $this->carBrand = $carBrand;
     }
 
     public function create(): View
     {
         $statusCourier=$this->statusCourier->getAllCourierStatus();
         $workRules=$this->workRule->getEnableWorkRules();
-        return view('auth.register', ['statusCourier' => $statusCourier, 'workRules' =>$workRules]);
+        $carColors=$this->carColors->getAllCarColors();
+        $carTransmission=$this->carTransmission->getAllCarTransmission();
+        $carBrand=$this->carBrand->getAllBrandWithModel();
+        $currentYear = date('Y');
+        $yearsManuf = range(1970, $currentYear);
+        return view('auth.register', ['statusCourier' => $statusCourier, 'workRules' =>$workRules, 'carColors' =>$carColors, 'carTransmission' =>$carTransmission, 'carBrand'=>$carBrand,'yearsManuf'=>$yearsManuf]);
     }
 
     /**
@@ -61,6 +73,7 @@ class RegisteredUserController extends Controller
      */
       public function store(UserRegisterRequest $request): RedirectResponse
     {
+       // dd($request);
         // Очистка ошибок сессии перед обработкой формы
         session()->forget('errors');
 
@@ -99,51 +112,98 @@ class RegisteredUserController extends Controller
         //создам авто курьера через АПИ
          if(($request->role=='moto')||($request->role=='avto')||($request->role=='gruz'))
         {
-            //преобразуем дату рождения
-            $dateOfBirth=$this->TransformDataToApiView($request->date_of_birth);
-            //преобразуем телефон
             $phone=$this->TransformPhone($request->phone);
+            //массив категорий
+            $avtoCategories=$this->transformAvtoCategories($request->role);
+            //преобразуем цвет
+            $colorAvto=$this->transformColor($request->carColor);
+            //преобразуем трансмиссию
+            $transmission=$this->transformTransmission($request->Transmission);
+            //преобразую бренд
+            $brandTS=$this->transformBrand($request->brandTS);
+            //преобразую модель
+            $modelTS=$this->transformModel($request->modelTS);
             //преобразуем роль
             $roleId=$this->statusCourier->getStatusId($request->role);
-            //преоразуем work_rule
-            $workRule=$this->workRule->getWorkId($request->workRule);
-            //преобразуем дату окончания действия водительского удостоверения
-            $license_expirated=$this->TransformDataToApiView($request->license_expirated);
-            $license_issue=$this->TransformDataToApiView($request->license_issue);
-            //получаем и преобразуем текущую дату
-            $date = new \DateTime('now', new \DateTimeZone('Europe/Moscow'));
-            // Форматируем дату в формате ISO 8601 YYYY-MM-DD
-             $hire_date = $date->format('Y-m-d');
-            $response =$this->yandexApiController->createAvtoCourier(
-                $dateOfBirth,
-                $request->first_name,
-                $request->surname,
-                $request->patronymic,
+            //создаю авто для этого курьера
+            $responseAvto =$this->yandexApiController->createCar(
+                $request->role,
+                $avtoCategories,
+                $request->boosterCount,
                 $phone,
-                $workRule,
-                $request->driverCountry,
-                $license_expirated,
-                $license_issue,
-                $request->licenceNumber,
-                $hire_date
-            );
-            // Если курьер успешно создан
-            if ($response['status'] == 200) {
-                // Успешный ответ
-                $userInfo=  User::create([
-                    'name' => $request->phone,
-                    'email' =>$request->email,
-                    'password' => Hash::make($request->password),
-                ]);
-                $this->courierInfo->createCourier($request,$userInfo,$roleId[0],$response['idempotency_token']);
-                $this->successApiLog->saveLog($userInfo,$response['data']['contractor_profile_id']);
+                $request->licencePlateNumber,
+                $request->registrationCertificate,
+                $brandTS,
+                $modelTS,
+                $colorAvto,
+                $transmission,
+                $request->vin,
+                $request->carManufactureYear,
+                $request->cargoHoldDimensionsHeight,
+                $request->cargoHoldDimensionsLength,
+                $request->cargoHoldDimensionsWidth,
+                $request->cargoLoaders,
+                $request->cargoCapacity,
 
-                event(new Registered($userInfo));
-                Auth::login($userInfo);
-                return redirect(RouteServiceProvider::HOME);
+            );
+          //  dd($responseAvto);
+            //если авто усешно создано
+            if ($responseAvto['status'] == 200) {
+               // dd($responseAvto);
+                $carId=$responseAvto['data']['vehicle_id'];
+                //перехожу к созданию самого авто курьера
+                //преобразуем дату рождения
+                $dateOfBirth=$this->TransformDataToApiView($request->date_of_birth);
+                //преоразуем work_rule
+                $workRule=$this->workRule->getWorkId($request->workRule);
+                //преобразуем дату окончания действия водительского удостоверения
+                $license_expirated=$this->TransformDataToApiView($request->license_expirated);
+                $license_issue=$this->TransformDataToApiView($request->license_issue);
+                //получаем и преобразуем текущую дату
+                $date = new \DateTime('now', new \DateTimeZone('Europe/Moscow'));
+                // Форматируем дату в формате ISO 8601 YYYY-MM-DD
+                $hire_date = $date->format('Y-m-d');
+                $response =$this->yandexApiController->createAvtoCourier(
+                    $dateOfBirth,
+                    $request->first_name,
+                    $request->surname,
+                    $request->patronymic,
+                    $phone,
+                    $workRule,
+                    $request->driverCountry,
+                    $license_expirated,
+                    $license_issue,
+                    $request->licenceNumber,
+                    $hire_date,
+                    $carId
+                );
+                // Если курьер успешно создан
+                if ($response['status'] == 200) {
+                    // Успешный ответ
+                    $userInfo=  User::create([
+                        'name' => $request->phone,
+                        'email' =>$request->email,
+                        'password' => Hash::make($request->password),
+                    ]);
+                    $this->courierInfo->createCourier($request,$userInfo,$roleId[0],$response['idempotency_token']);
+                    $this->successApiLog->saveLog($userInfo,$response['data']['contractor_profile_id']);
+                    //сохранение машины добавить
+
+                    event(new Registered($userInfo));
+                    Auth::login($userInfo);
+                    return redirect(RouteServiceProvider::HOME);
+                } else {
+                    //ошибка создания курьера
+                    $this->errorsApiLog->saveError($request,$roleId[0],$response);
+                    $message=$this->customErrorsService->errorMessage($response);
+                    return redirect()->back()->withInput()->withErrors(['custom_error' => $message]);
+                }
             } else {
-                $this->errorsApiLog->saveError($request,$roleId[0],$response);
-                $message=$this->customErrorsService->errorMessage($response);
+               // dd($responseAvto);
+
+                //ошибка создания авто
+                $this->errorsApiLog->saveError($request,$roleId[0],$responseAvto);
+                $message=$this->customErrorsService->errorMessageAvto($responseAvto);
                 return redirect()->back()->withInput()->withErrors(['custom_error' => $message]);
             }
         }

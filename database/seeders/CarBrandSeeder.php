@@ -1,0 +1,133 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\CarBrand;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
+class CarBrandSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+
+        $posts = [
+            [ 'car_brand' => 'Acura' ],
+            [ 'car_brand' => 'Alpina' ],
+            [ 'car_brand' => 'Alfa Romeo' ],
+            [ 'car_brand' => 'Aston Martin' ],
+            [ 'car_brand' => 'BAIC' ],
+            [ 'car_brand' => 'Bentley' ],
+            [ 'car_brand' => 'Audi' ],
+            [ 'car_brand' => 'BMW' ],
+            [ 'car_brand' => 'Brilliance' ],
+            [ 'car_brand' => 'Buick' ],
+            [ 'car_brand' => 'BYD' ],
+            [ 'car_brand' => 'Cadillac' ],
+            [ 'car_brand' => 'Changan' ],
+            [ 'car_brand' => 'Chery' ],
+            [ 'car_brand' => 'Chevrolet' ],
+            [ 'car_brand' => 'Chrysler' ],
+            [ 'car_brand' => 'Citroen' ],
+            [ 'car_brand' => 'Dacia' ],
+            [ 'car_brand' => 'Daewoo' ],
+            [ 'car_brand' => 'Daihatsu' ],
+            [ 'car_brand' => 'Derways' ],
+            [ 'car_brand' => 'Dodge' ],
+            [ 'car_brand' => 'DongFeng' ],
+            [ 'car_brand' => 'DS' ],
+            [ 'car_brand' => 'FAW' ],
+            [ 'car_brand' => 'Ferrari' ],
+            [ 'car_brand' => 'Fiat' ],
+            [ 'car_brand' => 'Ford' ],
+            [ 'car_brand' => 'ГАЗ' ],
+            [ 'car_brand' => 'Geely' ],
+            [ 'car_brand' => 'Genesis' ],
+            [ 'car_brand' => 'GMC' ],
+            [ 'car_brand' => 'Great Wall' ],
+            [ 'car_brand' => 'Hafei' ],
+            [ 'car_brand' => 'Haima' ],
+            [ 'car_brand' => 'Haval' ],
+            [ 'car_brand' => 'Holden' ],
+            [ 'car_brand' => 'Honda' ],
+            [ 'car_brand' => 'Hongqi' ],
+            [ 'car_brand' => 'Hyundai' ],
+            [ 'car_brand' => 'Infiniti' ],
+            [ 'car_brand' => 'Iran Khodro' ],
+            [ 'car_brand' => 'Isuzu' ],
+            [ 'car_brand' => 'JAC' ],
+            [ 'car_brand' => 'Jaguar' ],
+            [ 'car_brand' => 'Jeep' ],
+            [ 'car_brand' => 'Kia' ],
+            [ 'car_brand' => 'Koenigsegg' ],
+            [ 'car_brand' => 'Lamborghini' ],
+            [ 'car_brand' => 'Lancia' ],
+            [ 'car_brand' => 'Landwind' ],
+            [ 'car_brand' => 'Land Rover' ],
+            [ 'car_brand' => 'Lexus' ],
+            [ 'car_brand' => 'Lifan' ],
+            [ 'car_brand' => 'Lincoln' ],
+            [ 'car_brand' => 'Lotus' ],
+            [ 'car_brand' => 'Lynk & Co' ],
+            [ 'car_brand' => 'Mahindra' ],
+            [ 'car_brand' => 'Maruti' ],
+            [ 'car_brand' => 'Maserati' ],
+            [ 'car_brand' => 'Maxus' ],
+            [ 'car_brand' => 'Mazda' ],
+            [ 'car_brand' => 'McLaren' ],
+            [ 'car_brand' => 'Mercedes-Benz' ],
+            [ 'car_brand' => 'Mercury' ],
+            [ 'car_brand' => 'MG' ],
+            [ 'car_brand' => 'MINI' ],
+            [ 'car_brand' => 'Mitsubishi' ],
+            [ 'car_brand' => 'Mitsuoka' ],
+            [ 'car_brand' => 'Morgan' ],
+            [ 'car_brand' => 'Москвич' ],
+            [ 'car_brand' => 'Nio' ],
+            [ 'car_brand' => 'Nissan' ],
+            [ 'car_brand' => 'Opel' ],
+            [ 'car_brand' => 'Perodua' ],
+            [ 'car_brand' => 'Peugeot' ],
+            [ 'car_brand' => 'Pontiac' ],
+            [ 'car_brand' => 'Porsche' ],
+            [ 'car_brand' => 'Спортивные авто' ],
+            [ 'car_brand' => 'Proton' ],
+            [ 'car_brand' => 'Renault' ],
+            [ 'car_brand' => 'Roewe' ],
+            [ 'car_brand' => 'Rolls-Royce' ],
+            [ 'car_brand' => 'Renault Samsung' ],
+            [ 'car_brand' => 'Saturn' ],
+            [ 'car_brand' => 'Scion' ],
+            [ 'car_brand' => 'SEAT' ],
+            [ 'car_brand' => 'Shanghai Maple' ],
+            [ 'car_brand' => 'Skoda' ],
+            [ 'car_brand' => 'SsangYong' ],
+            [ 'car_brand' => 'Subaru' ],
+            [ 'car_brand' => 'Suzuki' ],
+            [ 'car_brand' => 'ТагАЗ' ],
+            [ 'car_brand' => 'TATA' ],
+            [ 'car_brand' => 'Tesla' ],
+            [ 'car_brand' => 'Toyota' ],
+            [ 'car_brand' => 'Trumpchi' ],
+            [ 'car_brand' => 'TVR' ],
+            [ 'car_brand' => 'УАЗ' ],
+            [ 'car_brand' => 'Vauxhall' ],
+            [ 'car_brand' => 'LADA (ВАЗ)' ],
+            [ 'car_brand' => 'Volkswagen' ],
+            [ 'car_brand' => 'Volvo' ],
+            [ 'car_brand' => 'ЗАЗ' ],
+            [ 'car_brand' => 'Zotye' ],
+            [ 'car_brand' => 'Bike' ],
+            [ 'car_brand' => 'Ravon' ],
+            [ 'car_brand' => 'Datsun' ],
+            [ 'car_brand' => 'Saab' ]
+        ];
+
+        foreach ($posts as $post) {
+            CarBrand::create($post);
+        }
+    }
+}

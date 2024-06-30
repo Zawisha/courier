@@ -112,6 +112,167 @@
             />
             <x-input-error :messages="$errors->get('driverCountry')" class="mt-2" />
         </div>
+        <!-- транспортное средство -->
+        <!-- высота ТС -->
+        <div class="mt-4 jsDriverGruz">
+            <x-input-label for="cargoHoldDimensionsHeight" :value="__('custom.cargoHoldDimensionsHeight')" />
+            <select id="cargoHoldDimensionsHeight" name="cargoHoldDimensionsHeight" class="block mt-1 w-full">
+                @for ($i = 90; $i <= 250; $i++)
+                    <option value="{{ $i }}" {{ old('cargoHoldDimensionsHeight') == $i ? 'selected' : '' }}>{{ $i }}</option>
+                @endfor
+            </select>
+            <x-input-error :messages="$errors->get('cargoHoldDimensionsHeight')" class="mt-2" />
+        </div>
+
+        <!-- длина ТС -->
+        <div class="mt-4 jsDriverGruz">
+            <x-input-label for="cargoHoldDimensionsLength" :value="__('custom.cargoHoldDimensionsLength')" />
+            <select id="cargoHoldDimensionsLength" name="cargoHoldDimensionsLength" class="block mt-1 w-full">
+                @for ($i = 170; $i <= 601; $i++)
+                    <option value="{{ $i }}" {{ old('cargoHoldDimensionsLength') == $i ? 'selected' : '' }}>{{ $i }}</option>
+                @endfor
+            </select>
+            <x-input-error :messages="$errors->get('cargoHoldDimensionsLength')" class="mt-2" />
+        </div>
+
+        <!-- ширина ТС -->
+        <div class="mt-4 jsDriverGruz">
+            <x-input-label for="cargoHoldDimensionsWidth" :value="__('custom.cargoHoldDimensionsWidth')" />
+            <select id="cargoHoldDimensionsWidth" name="cargoHoldDimensionsWidth" class="block mt-1 w-full">
+                @for ($i = 96; $i <= 250; $i++)
+                    <option value="{{ $i }}" {{ old('cargoHoldDimensionsWidth') == $i ? 'selected' : '' }}>{{ $i }}</option>
+                @endfor
+            </select>
+            <x-input-error :messages="$errors->get('cargoHoldDimensionsWidth')" class="mt-2" />
+        </div>
+        <!-- грузоподъёмность ТС -->
+        <div class="mt-4 jsDriverGruz">
+            <x-input-label for="cargoCapacity" :value="__('custom.cargoCapacity')" />
+            <select id="cargoCapacity" name="cargoCapacity" class="block mt-1 w-full">
+                @for ($i = 300; $i <= 6000; $i+= 100)
+                    <option value="{{ $i }}" {{ old('cargoCapacity') == $i ? 'selected' : '' }}>{{ $i }}</option>
+                @endfor
+            </select>
+            <x-input-error :messages="$errors->get('cargoCapacity')" class="mt-2" />
+        </div>
+        <!-- количество грузчиков -->
+        <div class="mt-4 jsDriverGruz" >
+            <x-input-label for="cargoLoaders" :value="__('custom.cargoLoaders')" />
+            <select id="cargoLoaders" name="cargoLoaders" class="block mt-1 w-full">
+                    <option value="0" {{ old('cargoLoaders') }}>0</option>
+                    <option value="1" {{ old('cargoLoaders') }}>1</option>
+                    <option value="2" {{ old('cargoLoaders') }}>2</option>
+            </select>
+            <x-input-error :messages="$errors->get('cargoLoaders')" class="mt-2" />
+        </div>
+        <!-- колчество бустеров -->
+        <div class="mt-4 jsDriver" >
+            <x-input-label for="boosterCount" :value="__('custom.boosterCount')" />
+            <select id="boosterCount" name="boosterCount" class="block mt-1 w-full">
+                <option value="0" {{ old('boosterCount') }}>0</option>
+                <option value="1" {{ old('boosterCount') }}>1</option>
+                <option value="2" {{ old('boosterCount') }}>2</option>
+                <option value="3" {{ old('boosterCount') }}>3</option>
+            </select>
+            <x-input-error :messages="$errors->get('boosterCount')" class="mt-2" />
+        </div>
+        <!--номер машины -->
+        <div class="mt-4 jsDriver">
+            <x-input-label for="licencePlateNumber" :value="__('custom.licencePlateNumber')" />
+            <x-text-input id="licencePlateNumber" class="block mt-1 w-full" type="text" name="licencePlateNumber" :value=" old('licencePlateNumber')"
+                          oninput="validateLicencePlate(this)"
+                          maxlength="9"
+            />
+            <img src="{{ asset('images/imgs/numberAuto.png') }}" alt="Пример номера автомобиля" class="mb-4">
+            <x-input-error :messages="$errors->get('licencePlateNumber')" class="mt-2" />
+        </div>
+        <!--Номер свидетельства о регистрации машины -->
+        <div class="mt-4 jsDriver">
+            <x-input-label for="registrationCertificate" :value="__('custom.registrationCertificate')" />
+            <x-text-input id="registrationCertificate" class="block mt-1 w-full" type="text" name="registrationCertificate" :value=" old('registrationCertificate')" maxlength="20"
+                          oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '')"
+                          onkeypress="return /[a-zA-Z0-9]/.test(event.key)"
+            />
+            <x-input-error :messages="$errors->get('registrationCertificate')" class="mt-2" />
+        </div>
+        <!--бренд машины список-->
+        <div class="mt-4 jsDriver">
+            <x-input-label for="brandTS" :value="__('custom.brandTS')" />
+            <select id="brandTS" name="brandTS" class="block mt-1 w-full" onchange="filterModels()">
+                @foreach($carBrand as $brand)
+                    <option value="{{ $brand->id }}" {{ old('brandTS') == $brand->id ? 'selected' : ($loop->first ? 'selected' : '') }}>
+                        {{ $brand->car_brand }}
+                    </option>
+                @endforeach
+            </select>
+            <x-input-error :messages="$errors->get('brandTS')" class="mt-2" />
+        </div>
+        <!--модель машины список-->
+        <div class="mt-4 jsDriver">
+            <x-input-label for="modelTS" :value="__('custom.modelTS')" />
+            <select id="modelTS" name="modelTS" class="block mt-1 w-full">
+                <!-- Этот список будет динамически заполнен JavaScript -->
+            </select>
+            <x-input-error :messages="$errors->get('modelTS')" class="mt-2" />
+        </div>
+        <!--цвет машины -->
+        <div class="mt-4">
+            <x-input-label for="carColor" :value="__('custom.Color')" />
+            <select id="carColor" name="carColor" class="block mt-1 w-full">
+                @foreach($carColors as $carColor)
+                    <option value="{{ $carColor->id }}" {{ old('carColor') == $carColor->id ? 'selected' : '' }}>
+                        @if ($locale == 'ru' || $locale == null)
+                            {{ $carColor->color_ru }}
+                        @else
+                            {{ $carColor->color_eng }}
+                        @endif
+                    </option>
+                @endforeach
+            </select>
+            <x-input-error :messages="$errors->get('role')" class="mt-2" />
+        </div>
+
+        <!--год выпуска машины список -->
+        <div class="mt-4 jsDriver">
+            <x-input-label for="carManufactureYear" :value="__('custom.carManufactureYear')" />
+            <select id="carManufactureYear" name="carManufactureYear" class="block mt-1 w-full">
+                @foreach($yearsManuf as $year)
+                    <option value="{{ $year }}" {{ old('carManufactureYear') == $year ? 'selected' : '' }}>
+                        {{ $year }}
+                    </option>
+                @endforeach
+            </select>
+            <x-input-error :messages="$errors->get('carManufactureYear')" class="mt-2" />
+        </div>
+
+        <!--трансмиссия машины -->
+        <div class="mt-4">
+            <x-input-label for="Transmission" :value="__('custom.Transmission')" />
+            <select id="Transmission" name="Transmission" class="block mt-1 w-full">
+                @foreach($carTransmission as $car)
+                    <option value="{{ $car->id }}" {{ old('Transmission') == $car->id ? 'selected' : '' }}>
+                        @if ($locale == 'ru' || $locale == null)
+                            {{ $car->transmission_ru }}
+                        @else
+                            {{ $car->transmission_eng }}
+                        @endif
+                    </option>
+                @endforeach
+            </select>
+            <x-input-error :messages="$errors->get('role')" class="mt-2" />
+        </div>
+        <!--вин машины -->
+        <div class="mt-4 jsDriver">
+            <div class="flex items-center">
+                <x-input-label for="vin" :value="__('custom.vin')" />
+            </div>
+            <x-text-input id="vin" class="block mt-1 w-full" type="text" name="vin" :value="old('vin')"
+                          oninput="validateVIN(this)"
+                          maxlength="17"
+                          placeholder="1HGCM82633A123456"
+            />
+            <x-input-error :messages="$errors->get('vin')" class="mt-2" />
+        </div>
         <!-- Telegram -->
         <div>
             <x-input-label for="telegram" :value="__('custom.Telegram')" />
@@ -153,10 +314,6 @@
         </div>
 
         <div class="flex items-center justify-end mt-4">
-{{--            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">--}}
-{{--                {{ __('Already registered?') }}--}}
-{{--            </a>--}}
-
             <x-primary-button class="ms-4" onclick="registerWithGif()" id="registerButton">
                 {{ __('custom.Register') }}
             </x-primary-button>
@@ -177,9 +334,42 @@
         </div>
     </div>
     <script>
+        const carData = @json($carBrand);
+        function filterModels() {
+            const brandSelect = document.getElementById('brandTS');
+            const modelSelect = document.getElementById('modelTS');
+            const selectedBrandId = brandSelect.value;
 
+            // Очистить список моделей
+            modelSelect.innerHTML = '';
+
+            if (selectedBrandId) {
+                // Найти выбранный бренд
+                const selectedBrand = carData.find(brand => brand.id == selectedBrandId);
+
+                if (selectedBrand && selectedBrand.car_model.length > 0) {
+                    // Добавить модели выбранного бренда
+                    selectedBrand.car_model.forEach((model, index) => {
+                        const option = document.createElement('option');
+                        option.value = model.id;
+                        option.textContent = model.car_model;
+                        if (index === 0) {
+                            option.selected = true;
+                        }
+                        modelSelect.appendChild(option);
+                    });
+                }
+            }
+        }
+        // Инициализация моделей для первого бренда при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            const brandSelect = document.getElementById('brandTS');
+            const firstBrandId = brandSelect.options[brandSelect.selectedIndex].value;
+            if (firstBrandId) {
+                filterModels();
+            }
+        });
         function registerWithGif() {
-
             // Показать модальное окно
             var myModal = new bootstrap.Modal(document.getElementById('exampleModalCenter'), {
                 keyboard: false
@@ -189,9 +379,7 @@
             const form = document.getElementById('form_register');
             form.classList.add('semi-transparent');
             document.getElementById("form_register").submit();
-
         }
-
         function toggleNameFields() {
             const role = document.getElementById('role').value;
             var elements = document.getElementsByClassName('jsDriver');
@@ -200,7 +388,60 @@
             for (var i = 0; i < elements.length; i++) {
                 elements[i].style.display = displayStyle;
             }
+            var elementsGruz = document.getElementsByClassName('jsDriverGruz');
+            var displayStyleGruz = (role === 'gruz') ? 'block' : 'none';
+            for (var i = 0; i < elementsGruz.length; i++) {
+                elementsGruz[i].style.display = displayStyleGruz;
+            }
         }
+
+        function validateLicencePlate(input) {
+            let value = input.value.toUpperCase(); // Приведение к верхнему регистру
+            let newValue = '';
+
+            const regex = /^[А-ЯЁ]?\d{0,3}[А-ЯЁ]{0,2}\d{0,3}$/;
+
+            // Пробегаем по каждому символу введенного значения и формируем новое значение
+            for (let i = 0; i < value.length; i++) {
+                if (i === 0) {
+                    if (/[\u0400-\u04FF]/.test(value[i])) {
+                        newValue += value[i];
+                    }
+                } else if (i >= 1 && i <= 3) {
+                    if (/\d/.test(value[i])) {
+                        newValue += value[i];
+                    }
+                } else if (i >= 4 && i <= 5) {
+                    if (/[\u0400-\u04FF]/.test(value[i])) {
+                        newValue += value[i];
+                    }
+                } else if (i >= 6 && i <= 8) {
+                    if (/\d/.test(value[i])) {
+                        newValue += value[i];
+                    }
+                }
+            }
+
+            // Проверка значения на соответствие нужному формату
+            if (regex.test(newValue)) {
+                input.value = newValue;
+            } else {
+                input.value = newValue.substring(0, newValue.length - 1);
+            }
+        }
+
+        function validateVIN(input) {
+            let value = input.value.toUpperCase(); // Приведение к верхнему регистру
+            const regex = /^[A-HJ-NPR-Z0-9]{0,17}$/; // Разрешены только символы VIN (без I, O, Q)
+
+            // Проверка значения на соответствие нужному формату
+            if (regex.test(value)) {
+                input.value = value;
+            } else {
+                input.value = value.substring(0, value.length - 1);
+            }
+        }
+
     </script>
     <script type="module">
 

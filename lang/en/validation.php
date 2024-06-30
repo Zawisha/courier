@@ -162,6 +162,7 @@ return [
     'custom_error_500' => 'Internal Server Error. Please try again later',
     'custom_error_400_license' => 'Invalid driver license',
     'custom_error_400_phone' => 'The phone number is already registered',
+    'custom_error_400_car_number' => 'Incorrect car number',
 
 
     /*

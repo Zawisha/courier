@@ -23,6 +23,8 @@ Route::get('/', function () {
 Route::get('locale/{lang}',[LocaleController::class, 'setLocale']);
 Route::get('createWalkingCourier',[YandexApiController::class, 'createWalkingCourier']);
 Route::get('getWorkRules',[YandexApiController::class, 'getWorkRules']);
+Route::get('getCars',[YandexApiController::class, 'getCars']);
+Route::get('newCar',[YandexApiController::class, 'newCar']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

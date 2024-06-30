@@ -16,6 +16,10 @@ class DatabaseSeeder extends Seeder
             StatusCourierSeeder::class,
             TokenInfoSeeder::class,
             WorkRulesSeeder::class,
+            CarColorsSeeder::class,
+            CarTransmissionSeeder::class,
+            CarBrandSeeder::class,
+            CarModelSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
 
