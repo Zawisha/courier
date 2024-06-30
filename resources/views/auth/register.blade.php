@@ -165,17 +165,6 @@
             </select>
             <x-input-error :messages="$errors->get('cargoLoaders')" class="mt-2" />
         </div>
-        <!-- колчество бустеров -->
-        <div class="mt-4 jsDriver" >
-            <x-input-label for="boosterCount" :value="__('custom.boosterCount')" />
-            <select id="boosterCount" name="boosterCount" class="block mt-1 w-full">
-                <option value="0" {{ old('boosterCount') }}>0</option>
-                <option value="1" {{ old('boosterCount') }}>1</option>
-                <option value="2" {{ old('boosterCount') }}>2</option>
-                <option value="3" {{ old('boosterCount') }}>3</option>
-            </select>
-            <x-input-error :messages="$errors->get('boosterCount')" class="mt-2" />
-        </div>
         <!--номер машины -->
         <div class="mt-4 jsDriver">
             <x-input-label for="licencePlateNumber" :value="__('custom.licencePlateNumber')" />

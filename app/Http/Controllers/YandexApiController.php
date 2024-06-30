@@ -247,7 +247,7 @@ class YandexApiController extends Controller
         // Тело запроса
         $body = [
             "child_safety" => [
-                "booster_count" => (int)$boosterCount
+                "booster_count" => 0
              ],
             "park_profile" =>
                 [
