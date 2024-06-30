@@ -216,7 +216,7 @@
             <x-input-error :messages="$errors->get('modelTS')" class="mt-2" />
         </div>
         <!--цвет машины -->
-        <div class="mt-4">
+        <div class="mt-4 jsDriver">
             <x-input-label for="carColor" :value="__('custom.Color')" />
             <select id="carColor" name="carColor" class="block mt-1 w-full">
                 @foreach($carColors as $carColor)
@@ -246,7 +246,7 @@
         </div>
 
         <!--трансмиссия машины -->
-        <div class="mt-4">
+        <div class="mt-4 jsDriver">
             <x-input-label for="Transmission" :value="__('custom.Transmission')" />
             <select id="Transmission" name="Transmission" class="block mt-1 w-full">
                 @foreach($carTransmission as $car)
