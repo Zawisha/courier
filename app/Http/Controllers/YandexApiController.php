@@ -292,7 +292,7 @@ class YandexApiController extends Controller
 
             // Получите ответ и декодируйте его
             $responseBody = json_decode($response->getBody(), true);
-           // dd($responseBody);
+            dd($responseBody);
             // Верните ответ
             return [
                 'status' => $response->getStatusCode(),
@@ -301,7 +301,7 @@ class YandexApiController extends Controller
             ];
 
         } catch (\Exception $e) {
-            //dd($e);
+            dd($e);
             $resp = $this->responseApiErrorTransform($e);
             return [
                 'status' => $resp['status'],

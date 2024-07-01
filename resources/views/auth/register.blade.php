@@ -82,7 +82,7 @@
 
         <!-- Водительское удостоверение -->
         <!-- Серия и номер водительского удостоверения -->
-        <div class="mt-4 jsDriver">
+        <div class="mt-4 jsDriver jsDriverMoto">
             <x-input-label for="surname" :value="__('custom.Driver license number')" />
             <x-text-input id="licenceNumber" class="block mt-1 w-full" type="text" name="licenceNumber" :value="old('licenceNumber')"  autofocus autocomplete="licenceNumber" placeholder=""
                           oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '')"
@@ -91,13 +91,13 @@
             <x-input-error :messages="$errors->get('licenceNumber')" class="mt-2" />
         </div>
         <!-- Дата выдачи водительского удостоверения-->
-        <div class="mt-4 jsDriver">
+        <div class="mt-4 jsDriver jsDriverMoto">
             <x-input-label for="license_issue" :value="__('custom.Driver license issue date')" />
             <input id="license_issue" type="text" name="license_issue" placeholder="{{__('custom.choose_date')}}" value="{{ old('license_issue')}}">
             <x-input-error :messages="$errors->get('license_issue')" class="mt-2" />
         </div>
         <!-- Дата окончания водительского удостоверения-->
-        <div class="mt-4 jsDriver">
+        <div class="mt-4 jsDriver jsDriverMoto">
             <x-input-label for="license_expirated" :value="__('custom.Driver license expiration date')" />
             <input id="license_expirated" type="text" name="license_expirated" placeholder="{{__('custom.choose_date')}}" value="{{ old('license_expirated')}}">
             <x-input-error :messages="$errors->get('license_expirated')" class="mt-2" />
@@ -166,7 +166,7 @@
             <x-input-error :messages="$errors->get('cargoLoaders')" class="mt-2" />
         </div>
         <!--номер машины -->
-        <div class="mt-4 jsDriver">
+        <div class="mt-4 jsDriver jsDriverMoto">
             <x-input-label for="licencePlateNumber" :value="__('custom.licencePlateNumber')" />
             <x-text-input id="licencePlateNumber" class="block mt-1 w-full" type="text" name="licencePlateNumber" :value=" old('licencePlateNumber')"
                           oninput="validateLicencePlate(this)"
@@ -176,7 +176,7 @@
             <x-input-error :messages="$errors->get('licencePlateNumber')" class="mt-2" />
         </div>
         <!--Номер свидетельства о регистрации машины -->
-        <div class="mt-4 jsDriver">
+        <div class="mt-4 jsDriver jsDriverMoto">
             <x-input-label for="registrationCertificate" :value="__('custom.registrationCertificate')" />
             <x-text-input id="registrationCertificate" class="block mt-1 w-full" type="text" name="registrationCertificate" :value=" old('registrationCertificate')" maxlength="20"
                           oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '')"
@@ -251,7 +251,7 @@
             <x-input-error :messages="$errors->get('role')" class="mt-2" />
         </div>
         <!--вин машины -->
-        <div class="mt-4 jsDriver">
+        <div class="mt-4 jsDriver jsDriverMoto">
             <div class="flex items-center">
                 <x-input-label for="vin" :value="__('custom.vin')" />
             </div>
@@ -371,17 +371,25 @@
         }
         function toggleNameFields() {
             const role = document.getElementById('role').value;
-            var elements = document.getElementsByClassName('jsDriver');
-            var displayStyle = (role === 'moto' || role === 'avto' || role === 'gruz') ? 'block' : 'none';
 
+            var elements = document.getElementsByClassName('jsDriver');
+            var displayStyle = (role === 'avto' || role === 'gruz') ? 'block' : 'none';
             for (var i = 0; i < elements.length; i++) {
                 elements[i].style.display = displayStyle;
             }
+
             var elementsGruz = document.getElementsByClassName('jsDriverGruz');
             var displayStyleGruz = (role === 'gruz') ? 'block' : 'none';
             for (var i = 0; i < elementsGruz.length; i++) {
                 elementsGruz[i].style.display = displayStyleGruz;
             }
+
+            var elementsGruz = document.getElementsByClassName('jsDriverMoto');
+            var displayStyleMoto = (role === 'moto') ? 'block' : 'none';
+            for (var i = 0; i < elementsGruz.length; i++) {
+                elementsGruz[i].style.display = displayStyleMoto;
+            }
+
         }
 
         function validateLicencePlate(input) {

@@ -112,6 +112,7 @@ class RegisteredUserController extends Controller
         //создам авто курьера через АПИ
          if(($request->role=='moto')||($request->role=='avto')||($request->role=='gruz'))
         {
+         //   dd($request);
             $phone=$this->TransformPhone($request->phone);
             //массив категорий
             $avtoCategories=$this->transformAvtoCategories($request->role);
@@ -120,9 +121,23 @@ class RegisteredUserController extends Controller
             //преобразуем трансмиссию
             $transmission=$this->transformTransmission($request->Transmission);
             //преобразую бренд
-            $brandTS=$this->transformBrand($request->brandTS);
+            if($request->role=='moto')
+            {
+                $brandTS='Bike';
+            }
+            else
+            {
+                $brandTS=$this->transformBrand($request->brandTS);
+            }
             //преобразую модель
-            $modelTS=$this->transformModel($request->modelTS);
+            if($request->role=='moto')
+            {
+                $modelTS='Courier';
+            }
+            else
+            {
+                $modelTS=$this->transformModel($request->modelTS);
+            }
             //преобразуем роль
             $roleId=$this->statusCourier->getStatusId($request->role);
             //создаю авто для этого курьера

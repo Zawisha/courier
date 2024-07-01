@@ -36,7 +36,7 @@ class UserRegisterRequest extends FormRequest
         ];
 
         // Добавляем правила только если роль не pesh или velo
-        if ($this->input('role') !== 'pesh' && $this->input('role') !== 'velo') {
+        if ($this->input('role') !== 'pesh' && $this->input('role') !== 'velo'&& $this->input('role') !== 'moto') {
             $rules['driverCountry'] = ['alpha', 'size:3'];
             $rules['licenceNumber'] = ['required', 'string', 'max:100', 'min:2'];
             $rules['license_issue'] = ['required', new DateFormat('d-m-Y')];
@@ -49,8 +49,18 @@ class UserRegisterRequest extends FormRequest
             $rules['carManufactureYear'] = ['required', 'numeric', 'digits:4','between:1970,2025'];
             $rules['Transmission'] = ['required', 'numeric'];
             $rules['vin'] = ['required', 'string','size:17'];
-
         }
+
+        // Добавляем правила для мопеда
+        if ($this->input('role') == 'moto') {
+            $rules['licenceNumber'] = ['required', 'string', 'max:100', 'min:2'];
+            $rules['license_issue'] = ['required', new DateFormat('d-m-Y')];
+            $rules['license_expirated'] = ['required', new DateFormat('d-m-Y')];
+            $rules['licencePlateNumber'] = ['required','string','max:9'];
+            $rules['registrationCertificate'] = ['required','string'];
+        }
+
+
         // Добавляем правила только если роль грузовик
         if ($this->input('role') == 'gruz') {
             $rules['cargoHoldDimensionsHeight'] = ['required', 'numeric', 'between:90,250'];
