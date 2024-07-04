@@ -10,6 +10,7 @@ window.Alpine = Alpine;
 import jQuery from 'jquery';
 window.$ = jQuery;
 import Inputmask from "inputmask";
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap';
 
 Alpine.start();
