@@ -386,7 +386,7 @@
             }
 
             var elementsGruz = document.getElementsByClassName('noMoto');
-            var displayStyleMoto = (role === 'moto') ? 'none' : 'block';
+            var displayStyleMoto = (role === 'moto' || role === 'pesh'|| role === 'velo') ? 'none' : 'block';
             for (var i = 0; i < elementsGruz.length; i++) {
                 elementsGruz[i].style.display = displayStyleMoto;
             }
