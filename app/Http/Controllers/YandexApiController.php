@@ -231,10 +231,15 @@ class YandexApiController extends Controller
 
     }
 
-    public function createCar($role, $categories, $boosterCount, $phone, $licencePlateNumber, $registrationCertificate, $brandTS, $modelTS, $colorAvto, $transmission, $vin, $carManufactureYear, $cargoHeight, $cargoLength, $cargoWidth, $cargoLoaders,$cargoCapacity)
+    public function createCar($role, $categories, $boosterCount, $phone, $licencePlateNumber, $registrationCertificate, $brandTS, $modelTS, $colorAvto, $transmission, $vin, $carManufactureYear, $cargoHeight, $cargoLength, $cargoWidth, $cargoLoaders,$cargoCapacity,$motoPhone)
     {
         $tokenInfo = $this->tokenInfo->getInfo();
         $idempotency_token = $this->tokenInfo->setRandToken();
+
+        if ($role == 'moto') {
+            $licencePlateNumber=$motoPhone;
+            $registrationCertificate=$motoPhone;
+        }
 
         $client = new Client();
         $url = 'https://fleet-api.taxi.yandex.net/v2/parks/vehicles/car';
@@ -292,7 +297,7 @@ class YandexApiController extends Controller
 
             // Получите ответ и декодируйте его
             $responseBody = json_decode($response->getBody(), true);
-            dd($responseBody);
+            //dd($responseBody);
             // Верните ответ
             return [
                 'status' => $response->getStatusCode(),
@@ -301,7 +306,7 @@ class YandexApiController extends Controller
             ];
 
         } catch (\Exception $e) {
-            dd($e);
+           // dd($e);
             $resp = $this->responseApiErrorTransform($e);
             return [
                 'status' => $resp['status'],

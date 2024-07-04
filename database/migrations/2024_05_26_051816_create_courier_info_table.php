@@ -28,6 +28,7 @@ return new class extends Migration
             $table->integer('sended_to_yandex')->default(0);
             $table->integer('work_rule_id')->default(0);
             $table->text('idempotency_token')->nullable();
+            $table->integer('car_id')->nullable()->default(0);
             $table->timestamps();
         });
     }

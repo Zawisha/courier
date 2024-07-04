@@ -7,6 +7,7 @@ use App\Http\Controllers\YandexApiController;
 use App\Http\Requests\UserRegisterRequest;
 use App\Models\CarBrand;
 use App\Models\CarColors;
+use App\Models\CarInfo;
 use App\Models\CarModel;
 use App\Models\CarTransmission;
 use App\Models\CourierInfo;
@@ -37,9 +38,10 @@ class RegisteredUserController extends Controller
     protected $errorsApiLog;
     protected $successApiLog;
     protected $customErrorsService;
+    protected $carInfo;
 
     public function __construct(StatusCourier $statusCourier, User $user, CourierInfo $courierInfo, YandexApiController $yandexApiController, WorkRule $workRule,
-                                ErrorsApiLog $errorsApiLog, SuccessApiLog $successApiLog, CustomErrorsService $customErrorsService, CarColors $carColors, CarTransmission $carTransmission, CarBrand $carBrand)
+                                ErrorsApiLog $errorsApiLog, SuccessApiLog $successApiLog, CustomErrorsService $customErrorsService, CarColors $carColors, CarTransmission $carTransmission, CarBrand $carBrand, CarInfo $carInfo)
     {
         $this->statusCourier = $statusCourier;
         $this->user = $user;
@@ -52,6 +54,7 @@ class RegisteredUserController extends Controller
         $this->carColors = $carColors;
         $this->carTransmission = $carTransmission;
         $this->carBrand = $carBrand;
+        $this->carInfo = $carInfo;
     }
 
     public function create(): View
@@ -97,7 +100,7 @@ class RegisteredUserController extends Controller
                     'email' =>$request->email,
                     'password' => Hash::make($request->password),
                 ]);
-                $this->courierInfo->createCourier($request,$userInfo,$roleId[0],$response['idempotency_token']);
+                $this->courierInfo->createCourier($request,$userInfo,$roleId[0],$response['idempotency_token'],0);
                 $this->successApiLog->saveLog($userInfo,$response['data']['contractor_profile_id']);
 
                 event(new Registered($userInfo));
@@ -114,6 +117,8 @@ class RegisteredUserController extends Controller
         {
          //   dd($request);
             $phone=$this->TransformPhone($request->phone);
+            $motoPhone = str_replace("+", "", $phone);
+        //    dd($phone);
             //массив категорий
             $avtoCategories=$this->transformAvtoCategories($request->role);
             //преобразуем цвет
@@ -124,19 +129,30 @@ class RegisteredUserController extends Controller
             if($request->role=='moto')
             {
                 $brandTS='Bike';
+                $brandTS_id=0;
             }
             else
             {
                 $brandTS=$this->transformBrand($request->brandTS);
+                $brandTS_id=$request->brandTS;
             }
             //преобразую модель
             if($request->role=='moto')
             {
                 $modelTS='Courier';
+                $modelTS_id=0;
+                $carManufactureYear=2022;
+                $licencePlateNumber=$motoPhone;
+                $registrationCertificate=$motoPhone;
+
             }
             else
             {
                 $modelTS=$this->transformModel($request->modelTS);
+                $modelTS_id=$request->modelTS;
+                $carManufactureYear=$request->carManufactureYear;
+                $licencePlateNumber=$request->licencePlateNumber;
+                $registrationCertificate=$request->registrationCertificate;
             }
             //преобразуем роль
             $roleId=$this->statusCourier->getStatusId($request->role);
@@ -153,12 +169,13 @@ class RegisteredUserController extends Controller
                 $colorAvto,
                 $transmission,
                 $request->vin,
-                $request->carManufactureYear,
+                $carManufactureYear,
                 $request->cargoHoldDimensionsHeight,
                 $request->cargoHoldDimensionsLength,
                 $request->cargoHoldDimensionsWidth,
                 $request->cargoLoaders,
                 $request->cargoCapacity,
+                $motoPhone
 
             );
           //  dd($responseAvto);
@@ -200,14 +217,31 @@ class RegisteredUserController extends Controller
                         'email' =>$request->email,
                         'password' => Hash::make($request->password),
                     ]);
-                    $this->courierInfo->createCourier($request,$userInfo,$roleId[0],$response['idempotency_token']);
                     $this->successApiLog->saveLog($userInfo,$response['data']['contractor_profile_id']);
-                    //сохранение машины добавить
-
+                    //сохранение машины
+                   $creatadCarId=$this->carInfo->createCarInfo(
+                        $carId,
+                        0,
+                        $licencePlateNumber,
+                        $registrationCertificate,
+                        $brandTS_id,
+                        $modelTS_id,
+                        $request->carColor,
+                        $request->Transmission,
+                        $request->vin,
+                        $request->carManufactureYear,
+                        $request->cargoHoldDimensionsHeight,
+                        $request->cargoHoldDimensionsLength,
+                        $request->cargoHoldDimensionsWidth,
+                        $request->cargoLoaders,
+                        $request->cargoCapacity,
+                    );
+                    $this->courierInfo->createCourier($request,$userInfo,$roleId[0],$response['idempotency_token'],$creatadCarId);
                     event(new Registered($userInfo));
                     Auth::login($userInfo);
                     return redirect(RouteServiceProvider::HOME);
                 } else {
+                    //dd($response);
                     //ошибка создания курьера
                     $this->errorsApiLog->saveError($request,$roleId[0],$response);
                     $message=$this->customErrorsService->errorMessage($response);

@@ -11,7 +11,7 @@ class CourierInfo extends Model
     protected $table = 'courier_info';
     protected $guarded = false;
 
-    public function createCourier($request,$userInfo,$roleId,$idempotency_token)
+    public function createCourier($request,$userInfo,$roleId,$idempotency_token,$creatadCarId)
     {
          CourierInfo::create([
             'user_id' => $userInfo->id,
@@ -26,6 +26,7 @@ class CourierInfo extends Model
             'telegram' => $request->telegram,
             'work_rule_id' => $request->workRule,
             'idempotency_token' => $idempotency_token,
+            'car_id'=>$creatadCarId
         ]);
     }
 

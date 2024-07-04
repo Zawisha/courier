@@ -17,6 +17,7 @@
         "vite": "^5.0.0"
     },
     "dependencies": {
+        "bootstrap": "^5.3.3",
         "flatpickr": "^4.6.13",
         "inputmask": "^5.0.8",
         "jquery-ui": "^1.13.3"

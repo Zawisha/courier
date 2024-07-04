@@ -25,11 +25,19 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        // Попытка аутентификации пользователя с использованием имени и пароля
+        $credentials = $request->only('name', 'password');
 
-        $request->session()->regenerate();
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+            return redirect()->intended(RouteServiceProvider::HOME);
+        }
+
+        // Если аутентификация не удалась, вернуться обратно с ошибкой
+        return back()->withErrors([
+            'name' => __('auth.failed'),
+        ])->onlyInput('name');
     }
 
     /**

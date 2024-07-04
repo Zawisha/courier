@@ -21,7 +21,7 @@ return [
     'choose_bd'=> 'Select your date of birth',
     'Date of birth'=> 'Date of birth',
     'Phone'=> 'Phone number',
-    'Driver license number'=> 'Driver license series and number',
+    'Driver license number'=> 'Driver license number',
     'Driver license issue date'=> 'Driver license issue date',
     'Driver license expiration date'=> 'Driver license expiration date',
     'Telegram'=> 'Telegram',

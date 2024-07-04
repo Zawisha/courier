@@ -7,7 +7,7 @@ class CustomErrorsService
 
     public function errorMessage($response)
     {
-        $message = '';
+        $message = $response['data']['message'];
         if ($response['status'] == 400) {
             $message = __('validation.custom_error_400');
             if($response['data']['message']=='invalid_driver_license')
