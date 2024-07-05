@@ -252,7 +252,7 @@
             <x-input-error :messages="$errors->get('role')" class="mt-2" />
         </div>
         <!--вин машины -->
-        <div class="mt-4 jsDriver">
+        <div class="mt-4 jsDriver noMoto">
             <div class="flex items-center">
                 <x-input-label for="vin" :value="__('custom.vin')" />
             </div>

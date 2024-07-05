@@ -57,5 +57,6 @@ return [
     'Width'=> 'Width',
     'Length'=> 'Length',
     'cargoCapacity'=> 'Load capacity(kg)',
-
+    'Remember me'=> 'Remember me',
+    'Log in'=> 'Log in',
 ];
