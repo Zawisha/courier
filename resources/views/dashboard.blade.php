@@ -12,7 +12,7 @@
                     {{ __("custom.success_registered") }}
                     <div>Ссылка для скачивания приложения</div>
                     <div>
-                        https://play.google.com/store/apps/details?id=ru.yandex.taximeter
+                        <a href="{{ url('https://play.google.com/store/apps/details?id=ru.yandex.taximeter') }}">Скачать</a>
                     </div>
                 </div>
             </div>
