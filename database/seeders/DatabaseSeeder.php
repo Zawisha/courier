@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             CarBrandSeeder::class,
             CarModelSeeder::class,
             RolesAndPermissionsSeeder::class,
-            AdminSeeder::class
+            AdminSeeder::class,
+            ApiPermSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
 

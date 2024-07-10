@@ -37,7 +37,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::middleware(['auth', 'permission:view page'])->group(function () {
-        Route::get('admin',[AdminController::class, 'listUsers']);
+        Route::get('users-list',[AdminController::class, 'usersList']);
+        Route::get('edit-user/{id}',[AdminController::class, 'showUser']);
+        Route::middleware(['permission:admin perm'])->group(function () {
+            Route::post('send_to_yandex_change', [AdminController::class, 'send_to_yandex_change']);
+        });
     });
 
 });

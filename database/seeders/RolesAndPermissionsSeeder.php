@@ -16,6 +16,7 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         // Создание права на просмотр страницы
         Permission::create(['name' => 'view page']);
+        Permission::create(['name' => 'admin perm']);
 
         // Создание ролей и назначение права
         $role = Role::create(['name' => 'user']);
@@ -24,6 +25,6 @@ class RolesAndPermissionsSeeder extends Seeder
         $role->givePermissionTo('view page');
 
         $role = Role::create(['name' => 'admin']);
-        $role->givePermissionTo('view page');
+        $role->givePermissionTo('admin perm','view page');
     }
 }

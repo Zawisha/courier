@@ -26,11 +26,17 @@ class AdminSeeder extends Seeder
             'email' => 'admin2@example.com',
             'password' => bcrypt('lianali'), // не забудьте изменить пароль
         ]);
-
+        $redaktor = User::create([
+            'name' => '+7 (666) 666-6666',
+            'email' => 'admin3@example.com',
+            'password' => bcrypt('rosmen'), // не забудьте изменить пароль
+        ]);
         // Назначение ролей администратора
         $adminRole = Role::where('name', 'admin')->first();
+        $redaktorRole = Role::where('name', 'redaktor')->first();
 
         $admin1->assignRole($adminRole);
         $admin2->assignRole($adminRole);
+        $redaktor->assignRole($redaktorRole);
     }
 }

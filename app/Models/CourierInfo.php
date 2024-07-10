@@ -11,9 +11,9 @@ class CourierInfo extends Model
     protected $table = 'courier_info';
     protected $guarded = false;
 
-    public function createCourier($request,$userInfo,$roleId,$idempotency_token,$creatadCarId)
+    public function createCourier($request,$userInfo,$roleId,$idempotency_token,$creatadCarId,$sended_to_yandex)
     {
-         CourierInfo::create([
+        CourierInfo::create([
             'user_id' => $userInfo->id,
             'role_id' => $roleId,
             'first_name' => $request->first_name,
@@ -26,7 +26,8 @@ class CourierInfo extends Model
             'telegram' => $request->telegram,
             'work_rule_id' => $request->workRule,
             'idempotency_token' => $idempotency_token,
-            'car_id'=>$creatadCarId
+            'car_id'=>$creatadCarId,
+            'sended_to_yandex'=>$sended_to_yandex,
         ]);
     }
 
