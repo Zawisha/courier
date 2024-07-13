@@ -28,6 +28,7 @@ class CourierInfo extends Model
             'idempotency_token' => $idempotency_token,
             'car_id'=>$creatadCarId,
             'sended_to_yandex'=>$sended_to_yandex,
+            'driverCountry'=>$request->driverCountry,
         ]);
     }
 
