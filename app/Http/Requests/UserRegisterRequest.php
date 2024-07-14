@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use App\Rules\DateFormat;
 class UserRegisterRequest extends FormRequest
@@ -34,6 +35,18 @@ class UserRegisterRequest extends FormRequest
             'telegram' => ['max:100'],
             'phone' => ['required', 'string', 'max:30', 'min:5','unique:users,name'],
         ];
+
+        // Получаем текущий URL
+        $currentUrl = $this->url();
+
+        // Изменяем правила валидации в зависимости от URL
+        if ($currentUrl === route('editCourier')) {
+            unset($rules['password']); // Убираем правило для пароля
+            $rules['phone'] = ['required', 'string', 'max:30', 'min:5',Rule::unique('users', 'name')->ignore($this->input('id'))];
+            $rules['email'] = ['required', 'string', 'lowercase', 'email', 'max:255',Rule::unique('users', 'email')->ignore($this->input('id'))];
+
+        }
+
 
         // Добавляем правила только если роль не pesh или velo
         if ($this->input('role') !== 'pesh' && $this->input('role') !== 'velo'&& $this->input('role') !== 'moto') {

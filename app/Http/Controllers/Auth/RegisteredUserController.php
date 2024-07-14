@@ -12,6 +12,7 @@ use App\Models\CarModel;
 use App\Models\CarTransmission;
 use App\Models\CourierInfo;
 use App\Models\ErrorsApiLog;
+use App\Models\OldCar;
 use App\Models\PermSendApi;
 use App\Models\StatusCourier;
 use App\Models\SuccessApiLog;
@@ -41,10 +42,11 @@ class RegisteredUserController extends Controller
     protected $customErrorsService;
     protected $carInfo;
     protected $permSendApi;
+    protected $oldCar;
 
     public function __construct(StatusCourier $statusCourier, User $user, CourierInfo $courierInfo, YandexApiController $yandexApiController, WorkRule $workRule,
                                 ErrorsApiLog $errorsApiLog, SuccessApiLog $successApiLog, CustomErrorsService $customErrorsService, CarColors $carColors, CarTransmission $carTransmission, CarBrand $carBrand, CarInfo $carInfo,
-                                PermSendApi $permSendApi
+                                PermSendApi $permSendApi, OldCar $oldCar
     )
     {
         $this->statusCourier = $statusCourier;
@@ -60,6 +62,7 @@ class RegisteredUserController extends Controller
         $this->carBrand = $carBrand;
         $this->carInfo = $carInfo;
         $this->permSendApi = $permSendApi;
+        $this->OldCar = $oldCar;
     }
 
     public function create(): View
@@ -314,5 +317,107 @@ class RegisteredUserController extends Controller
         }
     }
 
+    //редактирование курьера
+    public function editCourier(UserRegisterRequest $request)
+    {
+        // Очистка ошибок сессии перед обработкой формы
+        session()->forget('errors');
+
+        //преобразуем дату рождения
+        $dateOfBirth=$this->TransformDataToApiView($request->date_of_birth);
+        //преобразуем телефон
+        $phone=$this->TransformPhone($request->phone);
+        //преобразуем роль
+        $roleId=$this->statusCourier->getStatusId($request->role);
+        //преоразуем work_rule
+        $workRule=$this->workRule->getWorkId($request->workRule);
+
+        //редактирую user
+        $this->user->updateUser($request->id,$request->phone,$request->email);
+        //редактируем курьера
+        $this->courierInfo->editCourierInfo($request->id,$roleId[0],$request);
+        $carId=$this->courierInfo->getCarId($request->id);
+        //если роль пеший то удаляем старую машину если она есть
+        if(($request->role=='pesh')||($request->role=='velo'))
+        {
+            //если машина была
+            if($carId!==0)
+            {
+                //удаляем у курьера
+                $this->courierInfo->updateOneFieldCourier($request->id,'car_id',0);
+                //заносим в таблицу старых машин
+                $this->OldCar->createOldCar($request->id,$carId);
+            }
+        }
+        //если роль авто то создаём или обновляем машину
+        if(($request->role=='moto')||($request->role=='avto')||($request->role=='gruz')) {
+            $phone=$this->TransformPhone($request->phone);
+            $motoPhone = str_replace("+", "", $phone);
+            //преобразую модель
+            if($request->role=='moto')
+            {
+                $modelTS='Courier';
+                $modelTS_id=0;
+                $carManufactureYear=2022;
+                $licencePlateNumber=$motoPhone;
+                $registrationCertificate=$motoPhone;
+                $brandTS='Bike';
+                $brandTS_id=0;
+            }
+            else
+            {
+                $modelTS=$this->transformModel($request->modelTS);
+                $modelTS_id=$request->modelTS;
+                $carManufactureYear=$request->carManufactureYear;
+                $licencePlateNumber=$request->licencePlateNumber;
+                $registrationCertificate=$request->registrationCertificate;
+                $brandTS=$this->transformBrand($request->brandTS);
+                $brandTS_id=$request->brandTS;
+            }
+            //если машина была
+            if($carId!==0)
+            {
+            //сохранение машины
+            $creatadCarId = $this->carInfo->editCar(
+                $carId,
+                $licencePlateNumber,
+                $registrationCertificate,
+                $brandTS_id,
+                $modelTS_id,
+                $request->carColor,
+                $request->Transmission,
+                $request->vin,
+                $request->carManufactureYear,
+                $request->cargoHoldDimensionsHeight,
+                $request->cargoHoldDimensionsLength,
+                $request->cargoHoldDimensionsWidth,
+                $request->cargoLoaders,
+                $request->cargoCapacity,
+            );
+            }
+            //если машины не было то создаём
+            else
+            {
+                $creatadCarId=$this->carInfo->createCarInfo(
+                    null,
+                    0,
+                    $licencePlateNumber,
+                    $registrationCertificate,
+                    $brandTS_id,
+                    $modelTS_id,
+                    $request->carColor,
+                    $request->Transmission,
+                    $request->vin,
+                    $request->carManufactureYear,
+                    $request->cargoHoldDimensionsHeight,
+                    $request->cargoHoldDimensionsLength,
+                    $request->cargoHoldDimensionsWidth,
+                    $request->cargoLoaders,
+                    $request->cargoCapacity,
+                );
+                $this->courierInfo->updateOneFieldCourier($request->id,'car_id',$creatadCarId);
+            }
+        }
+    }
 
 }

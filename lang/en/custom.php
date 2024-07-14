@@ -59,4 +59,6 @@ return [
     'cargoCapacity'=> 'Load capacity(kg)',
     'Remember me'=> 'Remember me',
     'Log in'=> 'Log in',
+    'Save'=> 'Save',
+
 ];

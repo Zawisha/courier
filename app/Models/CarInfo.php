@@ -54,5 +54,39 @@ class CarInfo extends Model
         return $newCarInfoId;
     }
 
+    public function editCar(
+        $id,
+        $licencePlateNumber,
+        $registrationCertificate,
+        $brandTS_id,
+        $modelTS_id,
+        $carColor,
+        $Transmission,
+        $vin,
+        $carManufactureYear,
+        $cargoHoldDimensionsHeight,
+        $cargoHoldDimensionsLength,
+        $cargoHoldDimensionsWidth,
+        $cargoLoaders,
+        $cargoCapacity
+    )
+    {
+        CarInfo::where('id', $id)->update([
+            'licencePlateNumber' => $licencePlateNumber,
+            'registrationCertificate' => $registrationCertificate,
+            'brandTS_id' => $brandTS_id,
+            'modelTS_id' => $modelTS_id,
+            'colorAvto_id' => $carColor,
+            'transmission_id' => $Transmission,
+            'vin' => $vin,
+            'carManufactureYear' =>$carManufactureYear ,
+            'cargoHoldDimensionsHeight' =>$cargoHoldDimensionsHeight ,
+            'cargoHoldDimensionsLength' =>$cargoHoldDimensionsLength ,
+            'cargoHoldDimensionsWidth' => $cargoHoldDimensionsWidth,
+            'cargoLoaders' =>$cargoLoaders ,
+            'cargoCapacity' => $cargoCapacity,
+        ]);
+    }
+
 
 }

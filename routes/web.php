@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\YandexApiController;
@@ -42,6 +43,8 @@ Route::middleware('auth')->group(function () {
         Route::middleware(['permission:admin perm'])->group(function () {
             Route::post('send_to_yandex_change', [AdminController::class, 'send_to_yandex_change']);
         });
+        Route::post('editCourier',[RegisteredUserController::class, 'editCourier'])->name('editCourier');
+
     });
 
 });

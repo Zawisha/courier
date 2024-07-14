@@ -21,8 +21,9 @@
                 {{ $errors->first('custom_error') }}
             </div>
         @endif
-        <form method="POST" action="{{ route('register') }}" id="form_register">
+        <form method="POST" action="{{ route('editCourier') }}" id="form_register">
             @csrf
+            <input type="hidden" name="id" value="{{ $user->id }}">
             <!-- Phone -->
             <div class="mt-4">
                 <x-input-label for="phone" :value="__('custom.Phone')" />
@@ -288,7 +289,7 @@
 
             <div class="flex items-center justify-end mt-4">
                 <x-primary-button class="ms-4" onclick="registerWithGif()" id="registerButton">
-                    {{ __('custom.Register') }}
+                    {{ __('custom.Save') }}
                 </x-primary-button>
 
             </div>
@@ -314,8 +315,7 @@
             const brandSelect = document.getElementById('brandTS');
             const modelSelect = document.getElementById('modelTS');
             const selectedBrandId = brandSelect.value;
-            const selectedModelId = {{ $user->modelTS_id }}; // Значение user->modelTS_id из Blade шаблона
-
+            const selectedModelId = @json($user->modelTS_id);// Значение user->modelTS_id из Blade шаблона
             // Очистить список моделей
             modelSelect.innerHTML = '';
 

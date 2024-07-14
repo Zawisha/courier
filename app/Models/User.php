@@ -45,5 +45,14 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function updateUser($id,$name,$email)
+    {
+        User::where('id', $id)->update([
+            'name' =>$name,
+            'email' =>$email,
+        ]);
+    }
+
+
 
 }
