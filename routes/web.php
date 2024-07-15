@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\LocaleController;
+use App\Http\Controllers\MainController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\YandexApiController;
 use Illuminate\Support\Facades\Route;
@@ -18,9 +19,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return redirect()->route('register'); // Редирект на маршрут регистрации
-});
+Route::get('/',[MainController::class, 'index']);
 
 Route::get('locale/{lang}',[LocaleController::class, 'setLocale']);
 Route::get('createWalkingCourier',[YandexApiController::class, 'createWalkingCourier']);
@@ -46,6 +45,7 @@ Route::middleware('auth')->group(function () {
         Route::post('editCourier',[RegisteredUserController::class, 'editCourier'])->name('editCourier');
 
     });
+    Route::post('/logout', [RegisteredUserController::class, 'logout'])->name('logout');
 
 });
 

@@ -418,6 +418,20 @@ class RegisteredUserController extends Controller
                 $this->courierInfo->updateOneFieldCourier($request->id,'car_id',$creatadCarId);
             }
         }
+        $this->courierInfo->updateOneFieldCourier($request->id,'sended_to_yandex',1);
+        return back()->with('success', 'Пользователь отредактирован');
+
+    }
+
+    // Метод для выхода из системы
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');  // Перенаправление на главную страницу после выхода
     }
 
 }

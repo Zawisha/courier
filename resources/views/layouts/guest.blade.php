@@ -25,7 +25,7 @@
     </head>
     <body class="font-sans text-gray-900 antialiased">
     <div class="d-flex justify-content-center">
-        <a href="{{ url('/register') }}">
+        <a href="{{ url('/') }}">
         <img src="{{ asset('images/logo/logo.png') }}" alt="logo" class="img-fluid logo_set">
         </a>
     </div>

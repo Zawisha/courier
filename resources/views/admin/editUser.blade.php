@@ -21,6 +21,11 @@
                 {{ $errors->first('custom_error') }}
             </div>
         @endif
+        @if(session('success'))
+            <div class="alert alert-success">
+               {{ session('success') }}
+            </div>
+       @endif
         <form method="POST" action="{{ route('editCourier') }}" id="form_register">
             @csrf
             <input type="hidden" name="id" value="{{ $user->id }}">

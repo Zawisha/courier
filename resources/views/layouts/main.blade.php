@@ -22,6 +22,11 @@
 
 </head>
 <body>
+<div class="d-flex justify-content-center">
+    <a href="{{ url('/') }}">
+        <img src="{{ asset('images/logo/logo.png') }}" alt="logo" class="img-fluid logo_set">
+    </a>
+</div>
 @yield('content')
 </body>
 </html>
