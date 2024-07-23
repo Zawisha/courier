@@ -442,7 +442,7 @@ class RegisteredUserController extends Controller
         //если уже привязан к яндексу
         if($courierInfo->sended_to_yandex)
         {
-            dd('уже есть в яндексе');
+            return back()->with('success', 'Данные пользователя УЖЕ были в Яндекс');
         }
         else
         {
