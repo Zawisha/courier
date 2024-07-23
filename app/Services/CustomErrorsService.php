@@ -44,6 +44,10 @@ class CustomErrorsService
             {
                 $message = __('validation.custom_error_400_car_number');
             }
+            if($response['data']['message']=='car model must be correct')
+            {
+                $message = __('validation.carModelIncorrect');
+            }
        if ($response['status'] == 429) {
             $message = __('validation.custom_error_429');
         }

@@ -58,4 +58,9 @@ class CourierInfo extends Model
             $fieldName =>$dataField,
         ]);
     }
+    public function getToken($userId)
+    {
+        return CourierInfo::where('user_id', $userId)->value('idempotency_token');
+    }
+
 }

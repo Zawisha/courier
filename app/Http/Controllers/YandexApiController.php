@@ -70,6 +70,61 @@ class YandexApiController extends Controller
         }
     }
 
+    public function editWalkingCourier($date_of_birth, $first_name, $surname, $patronymic, $phone, $workRule, $contractor_profile_id)
+    {
+        $tokenInfo = $this->tokenInfo->getInfo();
+        $idempotency_token = $this->tokenInfo->setRandToken();
+
+        $client = new Client();
+        $url = 'https://fleet-api.taxi.yandex.net/v2/parks/contractors/driver-profile';
+        $headers = [
+            'X-Idempotency-Token' => $idempotency_token,
+            'X-Client-ID' => $tokenInfo->client_id,
+            'X-API-Key' => $tokenInfo->api_key,
+            'X-Park-ID' => $tokenInfo->park_id,
+        ];
+
+        // Тело запроса
+        $body = [
+            'contractor_profile_id' => $contractor_profile_id,
+            'birth_date' => $date_of_birth,
+            'full_name' => [
+                'first_name' => $first_name,
+                'last_name' => $surname,
+                'middle_name' => $patronymic,
+            ],
+            'phone' => $phone,
+            'work_rule_id' => $workRule,
+        ];
+        try {
+            // Отправьте POST-запрос
+            $response = $client->post($url, [
+                'headers' => $headers,
+                'json' => $body,
+            ]);
+
+            // Получите ответ и декодируйте его
+            $responseBody = json_decode($response->getBody(), true);
+            // Верните ответ
+            return [
+                'status' => $response->getStatusCode(),
+                'data' => $responseBody,
+                'idempotency_token' => $idempotency_token,
+            ];
+
+        } catch (\Exception $e) {
+
+            $resp = $this->responseApiErrorTransform($e);
+            return [
+                'status' => $resp['status'],
+                'data' => [
+                    'message' => $resp['message'],
+                ],
+            ];
+        }
+
+    }
+
     public function createAvtoCourier($date_of_birth, $first_name, $surname, $patronymic, $phone, $workRule, $driverCountry, $license_expirated, $license_issue, $licenceNumber, $hire_date, $carId)
     {
         $tokenInfo = $this->tokenInfo->getInfo();

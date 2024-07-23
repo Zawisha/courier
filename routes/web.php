@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['auth', 'permission:view page'])->group(function () {
         Route::get('users-list',[AdminController::class, 'usersList']);
         Route::get('edit-user/{id}',[AdminController::class, 'showUser']);
+        Route::post('sendToYandex/{id}',[RegisteredUserController::class, 'sendToYandex'])->name('sendToYandex');
         Route::middleware(['permission:admin perm'])->group(function () {
             Route::post('send_to_yandex_change', [AdminController::class, 'send_to_yandex_change']);
         });

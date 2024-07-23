@@ -169,7 +169,6 @@ class RegisteredUserController extends Controller
                 $carManufactureYear=2022;
                 $licencePlateNumber=$motoPhone;
                 $registrationCertificate=$motoPhone;
-
             }
             else
             {
@@ -267,9 +266,8 @@ class RegisteredUserController extends Controller
                         $this->courierInfo->createCourier($request,$userInfo,$roleId[0],$response['idempotency_token'],$creatadCarId,1);
                         event(new Registered($userInfo));
                         Auth::login($userInfo);
-                        return redirect(RouteServiceProvider::HOME);
+                        return redirect('/dashboard');
                     } else {
-                        //dd($response);
                         //ошибка создания курьера
                         $this->errorsApiLog->saveError($request,$roleId[0],$response);
                         $message=$this->customErrorsService->errorMessage($response);
@@ -317,7 +315,7 @@ class RegisteredUserController extends Controller
         }
     }
 
-    //редактирование курьера
+    //редактирование курьера локально
     public function editCourier(UserRegisterRequest $request)
     {
         // Очистка ошибок сессии перед обработкой формы
@@ -418,20 +416,178 @@ class RegisteredUserController extends Controller
                 $this->courierInfo->updateOneFieldCourier($request->id,'car_id',$creatadCarId);
             }
         }
-        $this->courierInfo->updateOneFieldCourier($request->id,'sended_to_yandex',1);
+//        $this->courierInfo->updateOneFieldCourier($request->id,'sended_to_yandex',0);
         return back()->with('success', 'Пользователь отредактирован');
 
     }
-
     // Метод для выхода из системы
     public function logout(Request $request)
     {
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
         return redirect('/');  // Перенаправление на главную страницу после выхода
+    }
+
+    //отправка в яндекс ( и проверка есть ли там такой курьер ) без редактирования
+    public function sendToYandex(Request $request, $id)
+    {
+        session()->forget('errors');
+        //проверка есть ли такой курьер в Яндекс либо надо привязать нашего
+        //проверка привязан ли наш курьер к яндексу
+        $idempotency_token=$this->courierInfo->getToken($id);
+        //получаем все данные про самого курьера
+        $courierInfo= $this->user->getUserFullInfo($id);
+       // dd($courierInfo);
+        //если уже привязан к яндексу
+        if($courierInfo->sended_to_yandex)
+        {
+            dd('уже есть в яндексе');
+        }
+        else
+        {
+            //преобразуем телефон
+            $phone=$this->TransformPhone($courierInfo->name);
+            if(($courierInfo->value_status=='pesh')||($courierInfo->value_status=='velo'))
+            {
+
+                //преобразуем дату рождения
+                $dateOfBirth=$this->TransformDataToApiView($courierInfo->date_of_birth);
+
+                //преобразуем роль ( тут не надо ) вместо этого $courierInfo->role_id
+                //преобразуем work_rule
+                $workRule=$this->workRule->getWorkId($courierInfo->work_rule_id);
+                //сохраняем пешего курьера в Яндексе
+                $response =$this->yandexApiController->createWalkingCourier($dateOfBirth,$courierInfo->first_name,$courierInfo->surname,$courierInfo->patronymic,$phone,$workRule, $courierInfo->idempotency_token);
+                // Если курьер успешно создан
+                if ($response['status'] == 200) {
+                    //сохраняем токен и ставим флаг отправки в яндекс
+                    $this->courierInfo->updateOneFieldCourier($id,'sended_to_yandex',1);
+                    $this->courierInfo->updateOneFieldCourier($id,'idempotency_token',$response['idempotency_token']);
+                    return back()->with('success', 'Данные пользователя отправлены в Яндекс');
+                } else {
+                    $message=$this->customErrorsService->errorMessage($response);
+                    return redirect()->back()->withInput()->withErrors(['custom_error' => $message]);
+                }
+            }
+            //если авто курьер
+            if(($courierInfo->value_status=='moto')||($courierInfo->value_status=='avto')||($courierInfo->value_status=='gruz'))
+            {
+                //dd($courierInfo);
+                $motoPhone = str_replace("+", "", $phone);
+                //массив категорий
+                $avtoCategories=$this->transformAvtoCategories($courierInfo->value_status);
+                //преобразуем цвет
+                $colorAvto=$this->transformColor($courierInfo->colorAvto_id);
+                //преобразуем трансмиссию
+                $transmission=$this->transformTransmission($courierInfo->transmission_id);
+
+                //преобразую бренд
+                if($courierInfo->value_status=='moto')
+                {
+                    $brandTS='Bike';
+                    $brandTS_id=0;
+                }
+                else
+                {
+                    $brandTS=$this->transformBrand($courierInfo->brandTS_id);
+                    $brandTS_id=$courierInfo->brandTS_id;
+                }
+                //преобразую модель
+                if($request->role=='moto')
+                {
+                    $modelTS='Courier';
+                    $modelTS_id=0;
+                    $carManufactureYear=2022;
+                    $licencePlateNumber=$motoPhone;
+                    $registrationCertificate=$motoPhone;
+                }
+                else
+                {
+                    $modelTS=$this->transformModel($courierInfo->modelTS_id);
+                    $modelTS_id=$courierInfo->modelTS_id;
+                    $carManufactureYear=$courierInfo->carManufactureYear;
+                    $licencePlateNumber=$courierInfo->licencePlateNumber;
+                    $registrationCertificate=$courierInfo->registrationCertificate;
+                }
+                //преобразуем роль
+                $roleId=$courierInfo->value_status;
+                //создаю авто для этого курьера в яндекс
+                $responseAvto =$this->yandexApiController->createCar(
+                    $roleId,
+                    $avtoCategories,
+                    0,
+                    $phone,
+                    $licencePlateNumber,
+                    $registrationCertificate,
+                    $brandTS,
+                    $modelTS,
+                    $colorAvto,
+                    $transmission,
+                    $courierInfo->vin,
+                    $carManufactureYear,
+                    $courierInfo->cargoHoldDimensionsHeight,
+                    $courierInfo->cargoHoldDimensionsLength,
+                    $courierInfo->cargoHoldDimensionsWidth,
+                    $courierInfo->cargoLoaders,
+                    $courierInfo->cargoCapacity,
+                    $motoPhone
+                );
+                //если авто усешно создано
+                  if ($responseAvto['status'] == 200) {
+                      $carId=$responseAvto['data']['vehicle_id'];
+                      //перехожу к созданию самого авто курьера
+                      //преобразуем дату рождения
+                      $dateOfBirth=$courierInfo->date_of_birth;
+                      //преоразуем work_rule
+                      $workRule=$this->workRule->getWorkId($courierInfo->work_rule_id);
+                      //преобразуем дату окончания действия водительского удостоверения
+                      $license_expirated=$this->TransformDataToApiView($courierInfo->license_expirated);
+                      $license_issue=$this->TransformDataToApiView($courierInfo->license_issue);
+                      //получаем и преобразуем текущую дату
+                      $date = new \DateTime('now', new \DateTimeZone('Europe/Moscow'));
+                      // Форматируем дату в формате ISO 8601 YYYY-MM-DD
+                      $hire_date = $date->format('Y-m-d');
+
+                      $response =$this->yandexApiController->createAvtoCourier(
+                          $dateOfBirth,
+                          $courierInfo->first_name,
+                          $courierInfo->surname,
+                          $courierInfo->patronymic,
+                          $phone,
+                          $workRule,
+                          $courierInfo->driverCountry,
+                          $license_expirated,
+                          $license_issue,
+                          $courierInfo->licenceNumber,
+                          $hire_date,
+                          $carId
+                      );
+                      // Если курьер успешно создан
+                      if ($response['status'] == 200) {
+                          $this->courierInfo->updateOneFieldCourier($id,'idempotency_token',$response['idempotency_token']);
+                          $this->courierInfo->updateOneFieldCourier($id,'sended_to_yandex',1);
+                          return back()->with('success', 'Данные пользователя отправлены в Яндекс');
+                      }
+                      //ошибка при создании курьера
+                      else
+                      {
+                          $message=$this->customErrorsService->errorMessage($response);
+                          return redirect()->back()->withInput()->withErrors(['custom_error' => $message]);
+                      }
+
+                }
+                //ошибка при создании авто
+                else
+                {
+                    $message=$this->customErrorsService->errorMessageAvto($responseAvto);
+                    return redirect()->back()->withInput()->withErrors(['custom_error' => $message]);
+                }
+
+            }
+
+        }
+        dd('отправлено');
     }
 
 }

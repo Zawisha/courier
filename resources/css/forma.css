@@ -30,3 +30,9 @@
 .cust_main_form {
     margin-top: 30px;
 }
+.cust_send_to_yand_suc {
+    color: green;
+}
+.cust_send_to_yand_not {
+    color: orange;
+}

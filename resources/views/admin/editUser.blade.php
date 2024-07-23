@@ -5,7 +5,17 @@
     <div class="container">
        Редактирование курьера
     </div>
-
+            <div class="mt-4">
+                @if($user->sended_to_yandex == 1)
+                    <div class="cust_send_to_yand_suc" id="send_suc">Отправлено в Яндекс</div>
+                @else
+                    <div class="cust_send_to_yand_not" id="send_not">Не отправлено в Яндекс</div>
+                @endif
+            </div>
+            <form action="{{ route('sendToYandex', $user->id) }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-primary">Отправить в Яндекс</button>
+            </form>
         @php
             $locale = App::getLocale();
         @endphp
