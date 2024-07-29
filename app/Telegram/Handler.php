@@ -16,7 +16,9 @@ class Handler extends WebhookHandler
     public function send_message($user)
     {
         $chat = TelegraphChat::find(2);
-        Telegraph::message('hello world')->chat($chat)->send();
+        $chat->message('hello111')->send();
+
+//        Telegraph::message('hello world')->chat($chat)->send();
     }
 
 }
