@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TelegramBotController;
 use App\Http\Controllers\YandexApiController;
 use Illuminate\Support\Facades\Route;
 
