@@ -89,6 +89,7 @@ class RegisteredUserController extends Controller
         // dd($request);
         // Очистка ошибок сессии перед обработкой формы
         session()->forget('errors');
+
         //разрешена ли отправка на АПИ
         $sendToApi=$this->permSendApi->getPermToSendApi();
         //создаём пешего курьера через АПИ
@@ -137,6 +138,8 @@ class RegisteredUserController extends Controller
                 $this->courierInfo->createCourier($request,$userInfo,$roleId[0],null,0,0);
                 event(new Registered($userInfo));
                 Auth::login($userInfo);
+                $handler = new Handler();
+                $handler->send_message('123');
                 return redirect(RouteServiceProvider::HOME);
             }
         }
@@ -312,8 +315,7 @@ class RegisteredUserController extends Controller
                 $this->courierInfo->createCourier($request,$userInfo,$roleId[0],null,$creatadCarId,0);
                 event(new Registered($userInfo));
                 Auth::login($userInfo);
-                $handler = new Handler();
-                $handler->send_message($user);
+
                 return redirect(RouteServiceProvider::HOME);
 
             }
