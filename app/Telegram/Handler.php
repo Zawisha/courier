@@ -7,6 +7,15 @@ use DefStudio\Telegraph\Telegraph;
 
 class Handler extends WebhookHandler
 {
+
+    protected $telegraph;
+
+    // Используем dependency injection для Telegraph
+    public function __construct(Telegraph $telegraph)
+    {
+        $this->telegraph = $telegraph;
+    }
+
     public function hello()
     {
         $this->reply('Привет с сервера');
@@ -14,7 +23,7 @@ class Handler extends WebhookHandler
 
     public function send_message($user)
     {
-        Telegraph::message('hello world')->send();
+        $this->telegraph->message('hello world')->send();
     }
 
 }
