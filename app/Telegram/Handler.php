@@ -4,6 +4,7 @@ namespace App\Telegram;
 
 use DefStudio\Telegraph\Facades\Telegraph;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
+use DefStudio\Telegraph\Models\TelegraphChat;
 
 class Handler extends WebhookHandler
 {
@@ -14,7 +15,8 @@ class Handler extends WebhookHandler
 
     public function send_message($user)
     {
-        Telegraph::message('hello world')->send();
+        $chat = TelegraphChat::find(1);
+        Telegraph::message('hello world')->chat($chat)->send();
     }
 
 }
