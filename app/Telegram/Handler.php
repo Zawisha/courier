@@ -3,6 +3,7 @@
 namespace App\Telegram;
 
 use DefStudio\Telegraph\Handlers\WebhookHandler;
+use DefStudio\Telegraph\Telegraph;
 
 class Handler extends WebhookHandler
 {
@@ -10,4 +11,10 @@ class Handler extends WebhookHandler
     {
         $this->reply('Привет с сервера');
     }
+
+    public function send_message($user)
+    {
+        Telegraph::message('hello world')->send();
+    }
+
 }

@@ -29,6 +29,8 @@ use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use stdClass;
 use App\Traits\DataFormatTrait;
+use App\Telegram\Handler;
+
 class RegisteredUserController extends Controller
 {
     use DataFormatTrait;
@@ -310,7 +312,10 @@ class RegisteredUserController extends Controller
                 $this->courierInfo->createCourier($request,$userInfo,$roleId[0],null,$creatadCarId,0);
                 event(new Registered($userInfo));
                 Auth::login($userInfo);
+                $handler = new Handler();
+                $handler->send_message($user);
                 return redirect(RouteServiceProvider::HOME);
+
             }
         }
     }
