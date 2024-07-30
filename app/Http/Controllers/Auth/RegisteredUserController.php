@@ -121,7 +121,7 @@ class RegisteredUserController extends Controller
                     event(new Registered($userInfo));
                     Auth::login($userInfo);
                     $handler = new Handler();
-                    $handler->send_message($request->phone,$request->first_name,$request->surname,$request->patronymic);
+                    $handler->send_message($request->phone,$request->first_name,$request->surname,$request->patronymic, $userInfo->id);
                     return redirect(RouteServiceProvider::HOME);
                 } else {
                     $this->errorsApiLog->saveError($request,$roleId[0],$response);
@@ -141,7 +141,7 @@ class RegisteredUserController extends Controller
                 event(new Registered($userInfo));
                 Auth::login($userInfo);
                 $handler = new Handler();
-                $handler->send_message($request->phone,$request->first_name,$request->surname,$request->patronymic);
+                $handler->send_message($request->phone,$request->first_name,$request->surname,$request->patronymic,$userInfo->id);
                 return redirect(RouteServiceProvider::HOME);
             }
         }
@@ -274,7 +274,7 @@ class RegisteredUserController extends Controller
                         event(new Registered($userInfo));
                         Auth::login($userInfo);
                         $handler = new Handler();
-                        $handler->send_message($request->phone,$request->first_name,$request->surname,$request->patronymic);
+                        $handler->send_message($request->phone,$request->first_name,$request->surname,$request->patronymic,$userInfo->id);
                         return redirect('/dashboard');
                     } else {
                         //ошибка создания курьера
@@ -320,9 +320,8 @@ class RegisteredUserController extends Controller
                 event(new Registered($userInfo));
                 Auth::login($userInfo);
                 $handler = new Handler();
-                $handler->send_message($request->phone,$request->first_name,$request->surname,$request->patronymic);
+                $handler->send_message($request->phone,$request->first_name,$request->surname,$request->patronymic,$userInfo->id);
                 return redirect(RouteServiceProvider::HOME);
-
             }
         }
     }

@@ -14,12 +14,12 @@ class Handler extends WebhookHandler
         $this->reply('Привет с сервера');
     }
 
-    public function send_message($phone,$firstName,$surname,$patronymic)
+    public function send_message($phone,$firstName,$surname,$patronymic,$id)
     {
         $chats = TelegraphChat::all();
 
         foreach ($chats as $chat) {
-            $chat->message('Зарегистрировался: ' . $firstName . ' ' . $surname . ' ' . $patronymic . ' Телефон: ' . $phone)->send();
+            $chat->message('Зарегистрировался: ' . $firstName . ' ' . $surname . ' ' . $patronymic . ' Телефон: ' . $phone.' '.'https://luxury-courier.ru/edit-user/'.$id)->send();
         }
     }
 
