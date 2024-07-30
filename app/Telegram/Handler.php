@@ -13,12 +13,10 @@ class Handler extends WebhookHandler
         $this->reply('Привет с сервера');
     }
 
-    public function send_message($user)
+    public function send_message($phone,$firstName,$surname,$patronymic)
     {
         $chat = TelegraphChat::find(1);
-        $chat->message('hello111')->send();
-
-//        Telegraph::message('hello world')->chat($chat)->send();
+        $chat->message('Зарегистрировался: '.$firstName.' '.$surname.' '.$patronymic.' '.'Телефон: '.$phone)->send();
     }
 
 }

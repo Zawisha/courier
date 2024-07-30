@@ -86,7 +86,7 @@ class RegisteredUserController extends Controller
      */
     public function store(UserRegisterRequest $request): RedirectResponse
     {
-        // dd($request);
+         //dd($request);
         // Очистка ошибок сессии перед обработкой формы
         session()->forget('errors');
 
@@ -120,6 +120,8 @@ class RegisteredUserController extends Controller
 
                     event(new Registered($userInfo));
                     Auth::login($userInfo);
+                    $handler = new Handler();
+                    $handler->send_message($request->phone,$request->first_name,$request->surname,$request->patronymic);
                     return redirect(RouteServiceProvider::HOME);
                 } else {
                     $this->errorsApiLog->saveError($request,$roleId[0],$response);
@@ -139,7 +141,7 @@ class RegisteredUserController extends Controller
                 event(new Registered($userInfo));
                 Auth::login($userInfo);
                 $handler = new Handler();
-                $handler->send_message('123');
+                $handler->send_message($request->phone,$request->first_name,$request->surname,$request->patronymic);
                 return redirect(RouteServiceProvider::HOME);
             }
         }
@@ -271,6 +273,8 @@ class RegisteredUserController extends Controller
                         $this->courierInfo->createCourier($request,$userInfo,$roleId[0],$response['idempotency_token'],$creatadCarId,1);
                         event(new Registered($userInfo));
                         Auth::login($userInfo);
+                        $handler = new Handler();
+                        $handler->send_message($request->phone,$request->first_name,$request->surname,$request->patronymic);
                         return redirect('/dashboard');
                     } else {
                         //ошибка создания курьера
@@ -315,7 +319,8 @@ class RegisteredUserController extends Controller
                 $this->courierInfo->createCourier($request,$userInfo,$roleId[0],null,$creatadCarId,0);
                 event(new Registered($userInfo));
                 Auth::login($userInfo);
-
+                $handler = new Handler();
+                $handler->send_message($request->phone,$request->first_name,$request->surname,$request->patronymic);
                 return redirect(RouteServiceProvider::HOME);
 
             }
