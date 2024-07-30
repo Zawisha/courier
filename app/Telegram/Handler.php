@@ -8,6 +8,7 @@ use DefStudio\Telegraph\Models\TelegraphChat;
 
 class Handler extends WebhookHandler
 {
+
     public function hello()
     {
         $this->reply('Привет с сервера');
@@ -15,8 +16,11 @@ class Handler extends WebhookHandler
 
     public function send_message($phone,$firstName,$surname,$patronymic)
     {
-        $chat = TelegraphChat::find(1);
-        $chat->message('Зарегистрировался: '.$firstName.' '.$surname.' '.$patronymic.' '.'Телефон: '.$phone)->send();
+        $chats = TelegraphChat::all();
+
+        foreach ($chats as $chat) {
+            $chat->message('Зарегистрировался: ' . $firstName . ' ' . $surname . ' ' . $patronymic . ' Телефон: ' . $phone)->send();
+        }
     }
 
 }
