@@ -8,6 +8,10 @@ use DefStudio\Telegraph\Models\TelegraphChat;
 
 class Handler extends WebhookHandler
 {
+    public function start()
+    {
+        $this->reply('Бот запущен, теперь ты будешь знать кто зарегился на нашей платформе');
+    }
 
     public function hello()
     {
