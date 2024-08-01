@@ -21,9 +21,17 @@ class Handler extends WebhookHandler
     public function send_message($phone,$firstName,$surname,$patronymic,$id,$telegram)
     {
         $chats = TelegraphChat::all();
-        if (substr($telegram, 0, 1) !== '@') {
-            $telegram = '@' . $telegram;
-        };
+        if(($telegram=='')||($telegram==null))
+        {
+            $telegram='не указан';
+        }
+        else
+        {
+            if (substr($telegram, 0, 1) !== '@') {
+                $telegram = '@' . $telegram;
+            };
+        }
+
         foreach ($chats as $chat) {
             $chat->message('Зарегистрировался: ' . $firstName . ' ' . $surname . ' ' . $patronymic . ' Телефон: ' . $phone.' '.'Телеграм:'.$telegram.' '.'https://luxury-courier.ru/edit-user/'.$id)->send();
         }
