@@ -26,6 +26,7 @@
                     <th>телеграм</th>
                     <th>Машина</th>
                     <th>Дата регистрации</th>
+                    <th>Отправлено</th>
                     <th>Редактировать</th>
                 </tr>
                 </thead>
@@ -41,6 +42,9 @@
                         <td>{{ $courier->telegram }}</td>
                         <td>{{ $courier->car_brand }}</td>
                         <td>{{ $courier->created_data }}</td>
+                        <td class="{{ $courier->sended_to_yandex ? 'text-green' : 'text-red' }}">
+                            {{ $courier->sended_to_yandex ? 'Да' : 'Нет' }}
+                        </td>
                         <td>
                             <a href="{{ url('/edit-user', ['id' => $courier->user_id]) }}">
                                 Редактировать

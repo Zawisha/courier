@@ -3,6 +3,11 @@
 @section('content')
    <div class="d-flex justify-content-center align-items-center cust_main_form">
       <div class="text-center">
+          @auth
+              <div class="app_link_yandex">
+                  <a href="https://play.google.com/store/apps/details?id=ru.yandex.taximeter" class="link-button">Установить Yandex Pro</a>
+              </div>
+          @endauth
          @guest
             <div><a href="{{ url('/register') }}" class="btn btn-primary btn-custom my-2">Регистрация</a></div>
             <div><a href="{{ url('/login') }}" class="btn btn-primary btn-custom my-2">Войти</a></div>

@@ -55,12 +55,13 @@ class AdminController extends Controller
                 'users.id as user_id',
                 'users.created_at as created_data',
                 'users.*', 'status_couriers.status as role_status','work_rules.name as work_rule_name', 'car_infos.*',
-        'courier_info.first_name', 'courier_info.surname', 'courier_info.telegram',
+        'courier_info.first_name', 'courier_info.surname', 'courier_info.telegram','courier_info.sended_to_yandex',
                 'car_brands.car_brand'
-            ) // перечислите все столбцы, кроме id
+            )
+            ->orderBy('users.created_at', 'desc') // добавляем сортировку по дате регистрации в обратном порядке
             ->paginate(10);
         $isChecked=$this->permSendApi->getPermToSendApi();
-        //dd($perm);
+        //dd($couriers);
         return view('admin.userList', ['couriers' => $couriers, 'isChecked'=>$isChecked]);
     }
 
