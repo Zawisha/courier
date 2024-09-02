@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\ProfileController;
@@ -50,6 +51,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [RegisteredUserController::class, 'logout'])->name('logout');
 
 });
+Route::get('/some',[ClientController::class, 'index']);
+Route::post('/checkClient',[ClientController::class, 'checkClient'])->name('checkClient');
 
 
 
