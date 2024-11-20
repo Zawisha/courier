@@ -92,5 +92,9 @@ class User extends Authenticatable
             ->first();
     }
 
+    public function getSuperUser()
+    {
+        return User::where('super',1)->get();
+    }
 
 }

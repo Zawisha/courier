@@ -1,0 +1,35 @@
+tabs:
+  main:
+    display: Основное
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+          -
+            handle: pole_tekst
+            field:
+              type: text
+              display: 'Поле Текст'
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+  novaya_vkladka:
+    display: 'Новая вкладка'
+    sections:
+      -
+        display: 'Новая секция'
+title: bloog

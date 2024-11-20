@@ -1,0 +1,4 @@
+configappname:
+  name: '{{ config:app:name }}'
+  url: /
+  locale: en_US

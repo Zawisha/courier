@@ -1,0 +1,15 @@
+title: Blog
+template: blog_view
+layout: blog_view
+mount: e92f4e4e-c7f4-49ce-bfe9-6849fd0454f0
+revisions: false
+route: '/blog/{slug}'
+sort_dir: asc
+date_behavior:
+  past: public
+  future: private
+preview_targets:
+  -
+    label: Entry
+    url: '{permalink}'
+    refresh: true

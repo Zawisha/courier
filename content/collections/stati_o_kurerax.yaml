@@ -1,0 +1,5 @@
+title: 'Статьи о курьерах'
+revisions: false
+date_behavior:
+  past: public
+  future: private
